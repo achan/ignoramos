@@ -7,6 +7,7 @@ Gem::Specification.new do |s|
   s.authors = ['Amos Chan']
   s.email = 'amosschan@gmail.com'
   s.files = ['lib/ignoramos.rb']
+  s.executables << 'ignoramos'
   s.homepage = 'http://rubygems.org/gems/ignoramos'
   s.license = 'MIT'
 end
