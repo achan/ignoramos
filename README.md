@@ -1,0 +1,37 @@
+Ignoramos: A static-site generator
+==================================
+
+Getting started
+===============
+
+```
+~ $ gem install ignoramos
+~ $ ignoramos new mysite
+~ $ cd mysite
+mysite $ ignoramos serve
+```
+
+
+Directory structure
+===================
+
+```
+.
+├── _config.yml
+├── _drafts
+|   ├── not-ready-to-be-published.md
+|   └── to-be-reviewed-by-editor.md
+├── _includes
+|   ├── footer.html
+|   └── header.html
+├── _layouts
+|   ├── default.html
+|   └── post.html
+├── _posts
+|   ├── 2014-06-22-hello-world.md
+|   └── 2014-07-19-hello-world-pt-2.md
+├── _data
+|   └── members.yml
+├── _site
+└── index.html
+```
