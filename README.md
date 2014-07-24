@@ -7,8 +7,6 @@ Getting started
 ```
 ~ $ gem install ignoramos
 ~ $ ignoramos new mysite
-~ $ cd mysite
-mysite $ ignoramos serve
 ```
 
 
@@ -30,8 +28,6 @@ Directory structure
 ├── _posts
 |   ├── 2014-06-22-hello-world.md
 |   └── 2014-07-19-hello-world-pt-2.md
-├── _data
-|   └── members.yml
-├── _site
-└── index.html
+└── _site
+    └── <point web root here>
 ```
