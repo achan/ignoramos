@@ -1,4 +1,4 @@
-class NewOption
+class NewCommand
   attr_accessor :dir
 
   def initialize(dir)

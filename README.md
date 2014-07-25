@@ -9,6 +9,8 @@ Getting started
 ~ $ ignoramos new mysite
 ```
 
+The `new` command will create a directory with the name provided and the
+directory structure below.
 
 Directory structure
 ===================
