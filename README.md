@@ -33,3 +33,11 @@ Directory structure
 └── _site
     └── <point web root here>
 ```
+
+```
+$ ignoramos build
+```
+
+The `build` command is expected to be run at the root directory of the
+application. It will generate all posts in the `_posts` directory and copy
+every file not prefixed with `_` into `_site`.
