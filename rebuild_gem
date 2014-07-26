@@ -1,0 +1,5 @@
+#!/bin/bash
+
+gem uninstall ignoramos-0.0.0.gem
+gem build ignoramos.gemspec
+gem install ignoramos-0.0.0.gem
