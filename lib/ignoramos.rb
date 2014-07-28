@@ -1,4 +1,5 @@
 require 'commands/new_command'
+require 'commands/build_command'
 
 class Ignoramos
   def initialize(args = [])
@@ -10,6 +11,8 @@ class Ignoramos
 
     if cmd == 'new'
       NewCommand.new(args[1])
+    elsif cmd == 'build'
+      BuildCommand.new(args[1])
     else
       NilCommand.new
     end
@@ -17,6 +20,7 @@ class Ignoramos
 
   NilCommand = Struct.new(:args) do
     def execute
+      puts 'command not supported'
     end
   end
 end

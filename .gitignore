@@ -20,3 +20,5 @@ tmp
 *.o
 *.a
 mkmf.log
+
+spec/commands/testsite/_site/posts
