@@ -9,7 +9,7 @@ RSpec.describe Post do
     describe '#content' do
       it 'returns post content' do
         expect(post.content).
-            to eq('This is a test post. It\'s title is {{title}}.')
+            to eq('This is a test post. It is title is {{title}}.')
       end
     end
 
@@ -27,7 +27,19 @@ RSpec.describe Post do
     describe '#render' do
       it 'populates variables within the post content' do
         expect(post.render).
-            to eq('This is a test post. It\'s title is Test Post.')
+            to eq('<p>This is a test post. It is title is Test Post.</p>')
+      end
+    end
+  end
+
+  context 'Markdown rendering' do
+    let(:content) { File.read('./spec/models/2014-07-29-markdown-test.md') }
+    let(:post) { Post.new(content) }
+
+    describe "#render" do
+      it 'renders markdown' do
+        expect(post.render).
+            to eq('<p>This is a <strong>Markdown test</strong>.</p>')
       end
     end
   end

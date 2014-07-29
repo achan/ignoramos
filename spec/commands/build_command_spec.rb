@@ -11,13 +11,14 @@ RSpec.describe BuildCommand do
         file.read()
       end
 
-      expect(contents).to eq('Hey world!')
+      expect(contents).to eq('<p>Hey world!</p>')
 
       contents = File.open('spec/commands/testsite/_site/posts/2014-06-22-hello-world.html', 'r') do |file|
         file.read()
       end
 
-      expect(contents).to eq('This is a test post. It\'s title is Test Post.')
+      expect(contents).
+          to eq('<p>This is a test post. It&#39;s title is Test Post.</p>')
     end
   end
 end

@@ -1,5 +1,6 @@
 require 'yaml'
 require 'liquid'
+require 'redcarpet'
 
 class Post
   attr_accessor :content
@@ -20,6 +21,13 @@ class Post
   end
 
   def render
-    Liquid::Template.parse(@content).render(@vars)
+    Liquid::Template.parse(markdown_to_html).render(@vars)
+  end
+
+  private
+  def markdown_to_html
+    Redcarpet::Markdown.new(Redcarpet::Render::HTML).
+                        render(@content).
+                        strip
   end
 end
