@@ -20,7 +20,7 @@ RSpec.describe Post do
       end
 
       it 'falls back to defaults when variables not provided' do
-        expect(post.vars['layout']).to eq('post')
+        expect(post.vars['layout']).to eq('default')
       end
     end
 

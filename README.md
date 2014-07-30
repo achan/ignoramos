@@ -41,3 +41,11 @@ $ ignoramos build
 The `build` command is expected to be run at the root directory of the
 application. It will generate all posts in the `_posts` directory and copy
 every file not prefixed with `_` into `_site`.
+
+How posts are built
+===================
+
+ - Load the markdown file
+ - Parse the post for YAML to determine layout
+ - Render layout as content
+ - Render liquid layout (header, footer, content)

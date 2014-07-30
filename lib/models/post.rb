@@ -7,7 +7,7 @@ class Post
   attr_accessor :vars
 
   DEFAULT_VARS = {
-    'layout' => 'post',
+    'layout' => 'default',
     'markup' => 'ext'
   }
 
