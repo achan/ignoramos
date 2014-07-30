@@ -4,6 +4,7 @@ require './lib/models/post'
 
 class BuildCommand
   def execute
+    Liquid::Template.file_system = Liquid::LocalFileSystem.new('spec/commands/testsite/_includes')
     FileUtils.rm_rf('spec/commands/testsite/_site/posts')
     FileUtils.mkdir_p('spec/commands/testsite/_site/posts')
 

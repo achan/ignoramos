@@ -14,9 +14,11 @@ RSpec.describe BuildCommand do
       actual = <<-ACTUAL
 header
 
+
 <p>Hey world!</p>
 
 footer
+
 ACTUAL
 
       expect(contents).to eq(actual)
@@ -28,9 +30,11 @@ ACTUAL
       actual = <<-ACTUAL
 header
 
+
 <p>This is a test post. It&#39;s title is Test Post.</p>
 
 footer
+
 ACTUAL
 
       expect(contents).to eq(actual)
