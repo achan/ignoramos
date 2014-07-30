@@ -3,12 +3,16 @@ require 'fileutils'
 require './lib/models/post'
 
 class BuildCommand
-  def execute
-    Liquid::Template.file_system = Liquid::LocalFileSystem.new('spec/commands/testsite/_includes')
-    FileUtils.rm_rf('spec/commands/testsite/_site/posts')
-    FileUtils.mkdir_p('spec/commands/testsite/_site/posts')
+  def initialize(dir = Dir.pwd)
+    @dir = dir
+  end
 
-    Dir.foreach('spec/commands/testsite/_posts') do |item|
+  def execute
+    Liquid::Template.file_system = Liquid::LocalFileSystem.new("#{ @dir }/_includes")
+    FileUtils.rm_rf("_site/posts")
+    FileUtils.mkdir_p("_site/posts")
+
+    Dir.foreach("#{ @dir }/_posts") do |item|
       next if item == '.' || item == '..'
 
       filename = item.slice(0, item.rindex('.'))
@@ -24,13 +28,13 @@ class BuildCommand
 
   private
   def new_file(filename, contents)
-    new_post_file = File.new("spec/commands/testsite/#{ filename }", 'w')
+    new_post_file = File.new("#{ @dir }/#{ filename }", 'w')
     new_post_file.write(contents)
     new_post_file.close
   end
 
   def read_file(filename)
-    File.open("spec/commands/testsite/#{ filename }", 'r') do |file|
+    File.open("#{ @dir }/#{ filename }", 'r') do |file|
       file.read()
     end
   end
@@ -40,8 +44,6 @@ class BuildCommand
   end
 
   def template(layout)
-    cache[layout.to_sym] ||= File.open("spec/commands/testsite/_layouts/#{ layout }/post.liquid") do |file|
-      file.read()
-    end
+    cache[layout.to_sym] ||= read_file("_layouts/#{ layout }/post.liquid")
   end
 end

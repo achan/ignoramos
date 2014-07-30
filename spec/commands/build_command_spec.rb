@@ -2,12 +2,13 @@ require './lib/commands/build_command'
 
 RSpec.describe BuildCommand do
   describe '#execute' do
-    let(:command) { BuildCommand.new }
+    let(:test_dir) { 'tmp/testsite' }
+    let(:command) { BuildCommand.new(test_dir) }
 
     before { command.execute }
 
     it 'drops rendered posts into the posts directory' do
-      contents = File.open('spec/commands/testsite/_site/posts/2014-07-27-hello-world-pt-2.html', 'r') do |file|
+      contents = File.open("#{ test_dir }/_site/posts/2014-07-27-hello-world-pt-2.html", 'r') do |file|
         file.read()
       end
 
@@ -23,7 +24,7 @@ ACTUAL
 
       expect(contents).to eq(actual)
 
-      contents = File.open('spec/commands/testsite/_site/posts/2014-06-22-hello-world.html', 'r') do |file|
+      contents = File.open("#{ test_dir }/_site/posts/2014-06-22-hello-world.html", 'r') do |file|
         file.read()
       end
 
@@ -41,4 +42,3 @@ ACTUAL
     end
   end
 end
-
