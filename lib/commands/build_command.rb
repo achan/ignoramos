@@ -22,7 +22,9 @@ class BuildCommand
       layout = read_file("_layouts/#{ new_post.vars['layout'] }/post.liquid")
 
       new_file("_site/posts/#{ filename }.html",
-               Liquid::Template.parse(layout).render({ 'post' => { 'content' => new_post.render } }))
+               Liquid::Template.parse(layout).render({
+                 'post' => { 'content' => new_post.render }
+               }.merge(new_post.vars)))
     end
   end
 

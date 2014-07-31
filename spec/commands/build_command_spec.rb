@@ -15,11 +15,11 @@ RSpec.describe BuildCommand do
       FileUtils.mkdir_p("#{ test_dir }/_layouts/default")
 
       new_post_file = File.new("#{ test_dir }/_includes/default/_header.liquid", 'w')
-      new_post_file.write('header')
+      new_post_file.write('header {{title}}')
       new_post_file.close
 
       new_post_file = File.new("#{ test_dir }/_includes/default/_footer.liquid", 'w')
-      new_post_file.write('footer')
+      new_post_file.write('footer {{title}}')
       new_post_file.close
 
       layout = <<-LAYOUT
@@ -67,11 +67,11 @@ POST
       end
 
       actual = <<-ACTUAL
-header
+header First Post
 
 <p>Hey world!</p>
 
-footer
+footer First Post
 ACTUAL
 
       expect(contents).to eq(actual)
@@ -81,11 +81,11 @@ ACTUAL
       end
 
       actual = <<-ACTUAL
-header
+header Test Post
 
 <p>This is a test post. It&#39;s title is Test Post.</p>
 
-footer
+footer Test Post
 ACTUAL
 
       expect(contents).to eq(actual)
