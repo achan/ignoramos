@@ -9,8 +9,8 @@ class BuildCommand
 
   def execute
     Liquid::Template.file_system = Liquid::LocalFileSystem.new("#{ @dir }/_includes")
-    FileUtils.rm_rf("_site/posts")
-    FileUtils.mkdir_p("_site/posts")
+    FileUtils.rm_rf("#{ @dir }/_site/posts")
+    FileUtils.mkdir_p("#{ @dir }/_site/posts")
 
     Dir.foreach("#{ @dir }/_posts") do |item|
       next if item == '.' || item == '..'

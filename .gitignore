@@ -1,5 +1,9 @@
+*.a
+*.bundle
 *.gem
+*.o
 *.rbc
+*.so
 .bundle
 .config
 .yardoc
@@ -9,15 +13,10 @@ _yardoc
 coverage
 doc/
 lib/bundler/man
+mkmf.log
 pkg
 rdoc
 spec/reports
 test/tmp
 test/version_tmp
-*.bundle
-*.so
-*.o
-*.a
-mkmf.log
-
-tmp/testsite/_site/posts
+tmp
