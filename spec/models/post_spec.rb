@@ -24,6 +24,18 @@ RSpec.describe Post do
       end
     end
 
+    describe '#slug' do
+      it 'returns the slugified title' do
+        expect(post.slug).to eq('/2014/06/22/test-post')
+      end
+    end
+
+    describe 'path' do
+      it 'returns the directory the post belongs in' do
+        expect(post.path).to eq('/2014/06/22')
+      end
+    end
+
     describe '#render' do
       it 'populates variables within the post content' do
         expect(post.render).

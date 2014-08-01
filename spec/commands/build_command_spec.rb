@@ -37,6 +37,7 @@ LAYOUT
       post = <<-POST
 ---
 title: First Post
+timestamp: 2014-07-27T00:26:45-04:00
 ---
 
 Hey world!
@@ -49,6 +50,7 @@ POST
       post = <<-POST
 ---
 title: Test Post
+timestamp: 2014-06-22T00:26:45-04:00
 ---
 
 This is a test post. It's title is {{title}}.
@@ -62,7 +64,7 @@ POST
     end
 
     it 'drops rendered posts into the posts directory' do
-      contents = File.open("#{ test_dir }/_site/posts/2014-07-27-hello-world-pt-2.html", 'r') do |file|
+      contents = File.open("#{ test_dir }/_site/posts/2014/07/27/first-post.html", 'r') do |file|
         file.read()
       end
 
@@ -76,7 +78,7 @@ ACTUAL
 
       expect(contents).to eq(actual)
 
-      contents = File.open("#{ test_dir }/_site/posts/2014-06-22-hello-world.html", 'r') do |file|
+      contents = File.open("#{ test_dir }/_site/posts/2014/06/22/test-post.html", 'r') do |file|
         file.read()
       end
 
