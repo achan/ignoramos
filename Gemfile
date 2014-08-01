@@ -11,4 +11,5 @@ group :development, :test do
   gem 'fakefs', '~> 0.5.0'
   gem 'guard'
   gem 'guard-rspec'
+  gem 'rake'
 end
