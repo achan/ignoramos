@@ -22,10 +22,28 @@ RSpec.describe BuildCommand do
       new_post_file.write('footer {{title}}')
       new_post_file.close
 
+      new_post_file = File.new("#{ test_dir }/_includes/default/_post.liquid", 'w')
+      new_post_file.write('{{post.html}}')
+      new_post_file.close
+
       layout = <<-LAYOUT
 {% include 'default/header' %}
 
-{{ post.content }}
+{% for post in posts %}
+{% include 'default/post' %}
+{% endfor %}
+
+{% include 'default/footer' %}
+LAYOUT
+
+      new_post_file = File.new("#{ test_dir }/_layouts/default/posts.liquid", 'w')
+      new_post_file.write(layout)
+      new_post_file.close
+
+      layout = <<-LAYOUT
+{% include 'default/header' %}
+
+{% include 'default/post' %}
 
 {% include 'default/footer' %}
 LAYOUT
@@ -61,6 +79,28 @@ POST
       new_post_file.close
 
       command.execute
+    end
+
+    describe 'home page' do
+      it 'prints the last 5 posts in descending order' do
+        contents = File.open("#{ test_dir }/_site/index.html", 'r') do |file|
+          file.read()
+        end
+
+        actual = <<-ACTUAL
+header 
+
+
+<p>Hey world!</p>
+
+<p>This is a test post. It&#39;s title is Test Post.</p>
+
+
+footer 
+  ACTUAL
+
+        expect(contents).to eq(actual)
+      end
     end
 
     it 'drops rendered posts into the posts directory' do

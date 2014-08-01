@@ -12,11 +12,15 @@ class BuildCommand
     FileUtils.rm_rf("#{ @dir }/_site/posts")
     mkdir_p("_site/posts")
 
-    load_posts
     generate_posts
+    generate_homepage
   end
 
   private
+  def posts
+    @posts ||= load_posts
+  end
+
   def load_posts
     @posts = []
 
@@ -25,18 +29,33 @@ class BuildCommand
 
       @posts << Post.new(read_file("_posts/#{ item }"))
     end
+
+    @posts
   end
 
   def generate_posts
-    @posts.each do |post|
+    posts.each do |post|
       layout = read_file("_layouts/#{ post.vars['layout'] }/post.liquid")
 
       mkdir_p("_site/posts#{ post.path }")
       new_file("_site/posts#{ post.slug }.html",
                Liquid::Template.parse(layout).render({
-                 'post' => { 'content' => post.render }
+                 'post' => post
                }.merge(post.vars)))
     end
+  end
+
+  def generate_homepage
+    homepage_posts = posts.sort_by { |p| [p.timestamp, p.title] }.
+                           reverse.
+                           first(5)
+
+    layout = read_file("_layouts/default/posts.liquid")
+
+    new_file("_site/index.html",
+             Liquid::Template.parse(layout).render({
+               'posts' => homepage_posts
+             }))
   end
 
   def mkdir_p(dir)
