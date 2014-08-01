@@ -1,6 +1,9 @@
 Ignoramos: A static-site generator
 ==================================
 
+[![Build
+Status](https://travis-ci.org/achan/ignoramos-md.svg?branch=master)](https://travis-ci.org/achan/ignoramos-md)
+
 Getting started
 ===============
 
