@@ -1,6 +1,6 @@
 require 'fileutils'
-require './lib/commands/build_command'
-require './lib/commands/new_command'
+require 'commands/build_command'
+require 'commands/new_command'
 
 RSpec.describe BuildCommand do
   describe '#execute' do
@@ -24,6 +24,10 @@ RSpec.describe BuildCommand do
 
       new_post_file = File.new("#{ test_dir }/_includes/default/_post.liquid", 'w')
       new_post_file.write('{{post.html}}')
+      new_post_file.close
+
+      new_post_file = File.new("#{ test_dir }/_includes/default/_page.liquid", 'w')
+      new_post_file.write('{{page.html}}')
       new_post_file.close
 
       layout = <<-LAYOUT
@@ -67,6 +71,32 @@ LAYOUT
 
       new_post_file = File.new("#{ test_dir }/_layouts/default/post.liquid", 'w')
       new_post_file.write(layout)
+      new_post_file.close
+
+      layout = <<-LAYOUT
+{% include 'default/header' %}
+
+{% include 'default/page' %}
+
+{% include 'default/footer' %}
+LAYOUT
+
+      new_post_file = File.new("#{ test_dir }/_layouts/default/page.liquid", 'w')
+      new_post_file.write(layout)
+      new_post_file.close
+
+      page = <<-POST
+---
+title: First Page
+timestamp: 2014-07-27T00:26:45-04:00
+tags: tag1, tag2
+---
+
+Hey page!
+POST
+
+      new_post_file = File.new("#{ test_dir }/_pages/hello-world-pt-2.md", 'w')
+      new_post_file.write(page)
       new_post_file.close
 
       post = <<-POST
@@ -155,6 +185,22 @@ footer
 
         expect(contents).to eq(actual)
       end
+    end
+
+    it 'drops rendered pages into the _site directory' do
+      contents = File.open("#{ test_dir }/_site/first-page.html", 'r') do |file|
+        file.read()
+      end
+
+      actual = <<-ACTUAL
+header First Page
+
+<p>Hey page!</p>
+
+footer First Page
+ACTUAL
+
+      expect(contents).to eq(actual)
     end
 
     it 'drops rendered posts into the _site directory' do

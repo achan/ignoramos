@@ -1,6 +1,7 @@
 require 'liquid'
 require 'fileutils'
-require './lib/models/post'
+require 'models/post'
+require 'models/page'
 
 class BuildCommand
   def initialize(dir = Dir.pwd)
@@ -12,6 +13,7 @@ class BuildCommand
     FileUtils.rm_rf("#{ @dir }/_site")
     mkdir_p("_site")
 
+    generate_pages
     generate_posts
     generate_tag_index
     generate_homepage
@@ -22,27 +24,42 @@ class BuildCommand
     @posts ||= load_posts
   end
 
-  def load_posts
-    @posts = []
+  def pages
+    @pages ||= load_posts('_pages') { |contents| Page.new(contents) }
+  end
 
-    Dir.foreach("#{ @dir }/_posts") do |item|
+  def load_posts(dir='_posts', &block)
+    posts = []
+
+    Dir.foreach("#{ @dir }/#{ dir }") do |item|
       next if item == '.' || item == '..'
 
-      @posts << Post.new(read_file("_posts/#{ item }"))
+      contents = read_file("#{ dir }/#{ item }")
+      posts << if block_given?
+        yield contents
+      else
+        Post.new(contents)
+      end
     end
 
-    @posts
+    posts
+  end
+
+  def generate_pages
+    generate_dir(pages, 'page') { |p| { 'page' => p } }
   end
 
   def generate_posts
-    posts.each do |post|
-      layout = read_file("_layouts/#{ post.vars['layout'] }/post.liquid")
+    generate_dir(posts, 'post') { |p| { 'post' => p } }
+  end
 
+  def generate_dir(posts, template, &block)
+    posts.each do |post|
+      params = yield post
+      layout = read_file("_layouts/#{ post.vars['layout'] }/#{ template }.liquid")
       mkdir_p("_site#{ post.path }")
-      new_file("_site#{ post.slug }.html",
-               Liquid::Template.parse(layout).render({
-                 'post' => post
-               }.merge(post.vars)))
+      new_file("_site#{ post.permalink }.html",
+               Liquid::Template.parse(layout).render(params.merge(post.vars)))
     end
   end
 

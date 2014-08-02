@@ -17,6 +17,10 @@ RSpec.describe NewCommand do
       expect(File.directory?('testdir/_posts')).to be_truthy
     end
 
+    it 'creates folder for pages' do
+      expect(File.directory?('testdir/_pages')).to be_truthy
+    end
+
     it 'creates folder for includes' do
       expect(File.directory?('testdir/_includes')).to be_truthy
     end

@@ -12,6 +12,7 @@ class NewCommand
       "#{ @dir }/_drafts",
       "#{ @dir }/_includes",
       "#{ @dir }/_layouts",
+      "#{ @dir }/_pages",
       "#{ @dir }/_posts",
       "#{ @dir }/_site"
     ])

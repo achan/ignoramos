@@ -18,13 +18,17 @@ class Post
     @vars = DEFAULT_VARS.merge(YAML::load(content))
   end
 
-  def slug
+  def permalink
     return @vars['permalink'] if @vars.has_key?('permalink')
-    "#{ path }/#{ @vars['title'].downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '') }"
+    "#{ path }/#{ slug }"
+  end
+
+  def slug
+    @slug ||= @vars['title'].downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
   end
 
   def path
-    "/#{ date.year }/#{ date.month.to_s.rjust(2, '0') }/#{ date.day.to_s.rjust(2, '0') }"
+    @path ||= "/#{ date.year }/#{ date.month.to_s.rjust(2, '0') }/#{ date.day.to_s.rjust(2, '0') }"
   end
 
   def html

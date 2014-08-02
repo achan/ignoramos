@@ -1,4 +1,4 @@
-require './lib/models/post'
+require 'models/post'
 require 'fakefs/spec_helpers'
 
 RSpec.describe Post do
@@ -36,9 +36,15 @@ CONTENT
       end
     end
 
+    describe '#permalink' do
+      it 'returns the permalink' do
+        expect(post.permalink).to eq('/2014/06/22/test-post')
+      end
+    end
+
     describe '#slug' do
       it 'returns the slugified title' do
-        expect(post.slug).to eq('/2014/06/22/test-post')
+        expect(post.slug).to eq('test-post')
       end
     end
 
