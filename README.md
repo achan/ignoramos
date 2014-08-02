@@ -2,11 +2,11 @@ Ignoramos: A static-site generator
 ==================================
 
 [![Build
-Status](https://travis-ci.org/achan/ignoramos-md.svg?branch=master)](https://travis-ci.org/achan/ignoramos-md)
+Status](https://travis-ci.org/achan/ignoramos.svg?branch=master)](https://travis-ci.org/achan/ignoramos)
 [![Code
-Climate](https://codeclimate.com/github/achan/ignoramos-md/badges/gpa.svg)](https://codeclimate.com/github/achan/ignoramos-md)
+Climate](https://codeclimate.com/github/achan/ignoramos/badges/gpa.svg)](https://codeclimate.com/github/achan/ignoramos)
 [![Coverage
-Status](https://img.shields.io/coveralls/achan/ignoramos-md.svg)](https://coveralls.io/r/achan/ignoramos-md)
+Status](https://img.shields.io/coveralls/achan/ignoramos.svg)](https://coveralls.io/r/achan/ignoramos)
 
 Getting started
 ===============
