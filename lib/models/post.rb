@@ -39,6 +39,10 @@ class Post
     @title ||= @vars['title']
   end
 
+  def tags
+    @tags ||= @vars['tags'].split(',').map { |x| x.strip }.sort
+  end
+
   def to_liquid
     {
       'html' => html,

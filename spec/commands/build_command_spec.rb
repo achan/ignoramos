@@ -29,6 +29,23 @@ RSpec.describe BuildCommand do
       layout = <<-LAYOUT
 {% include 'default/header' %}
 
+{% for tag in tags %}
+{{ tag.name }}
+{% for post in tag.posts %}
+{{ post.title }}
+{% endfor %}
+{% endfor %}
+
+{% include 'default/footer' %}
+LAYOUT
+
+      new_post_file = File.new("#{ test_dir }/_layouts/default/tags.liquid", 'w')
+      new_post_file.write(layout)
+      new_post_file.close
+
+      layout = <<-LAYOUT
+{% include 'default/header' %}
+
 {% for post in posts %}
 {% include 'default/post' %}
 {% endfor %}
@@ -56,6 +73,7 @@ LAYOUT
 ---
 title: First Post
 timestamp: 2014-07-27T00:26:45-04:00
+tags: tag1, tag2
 ---
 
 Hey world!
@@ -69,6 +87,7 @@ POST
 ---
 title: Test Post
 timestamp: 2014-06-22T00:26:45-04:00
+tags: tag2, tag3
 ---
 
 This is a test post. It's title is {{title}}.
@@ -79,6 +98,41 @@ POST
       new_post_file.close
 
       command.execute
+    end
+
+    describe 'tag index' do
+      it 'lists all posts ordered by tags' do
+        contents = File.open("#{ test_dir }/_site/tags.html", 'r') do |file|
+          file.read()
+        end
+
+        actual = <<-ACTUAL
+header 
+
+
+tag1
+
+First Post
+
+
+tag2
+
+First Post
+
+Test Post
+
+
+tag3
+
+Test Post
+
+
+
+footer 
+  ACTUAL
+
+        expect(contents).to eq(actual)
+      end
     end
 
     describe 'home page' do

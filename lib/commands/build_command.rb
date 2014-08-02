@@ -13,6 +13,7 @@ class BuildCommand
     mkdir_p("_site/posts")
 
     generate_posts
+    generate_tag_index
     generate_homepage
   end
 
@@ -43,6 +44,29 @@ class BuildCommand
                  'post' => post
                }.merge(post.vars)))
     end
+  end
+
+  def tags
+    tags = {}
+    posts.each do |p|
+      p.tags.each do |t|
+        tags[t] ||= []
+        tags[t] << p
+      end
+    end
+
+    tags.sort.map do |name, posts|
+      { 'name' => name, 'posts' => posts.sort_by { |p| p.title } }
+    end
+  end
+
+  def generate_tag_index
+    layout = read_file("_layouts/default/tags.liquid")
+
+    new_file("_site/tags.html",
+             Liquid::Template.parse(layout).render({
+               'tags' => tags
+             }))
   end
 
   def generate_homepage

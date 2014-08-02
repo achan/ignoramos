@@ -3,7 +3,19 @@ require 'fakefs/spec_helpers'
 
 RSpec.describe Post do
   context 'YAML front-matter string provided' do
-    let(:content) { File.read('./spec/models/2014-06-22-hello-world.md') }
+    let(:content) do
+      <<-CONTENT
+---
+title: Test Post
+markup: text
+timestamp: 2014-06-22T00:15:50-04:00
+tags: test, beginning, randomtag
+---
+
+This is a test post. It is title is {{title}}.
+CONTENT
+    end
+
     let(:post) { Post.new(content) }
 
     describe '#content' do
@@ -42,10 +54,25 @@ RSpec.describe Post do
             to eq('<p>This is a test post. It is title is Test Post.</p>')
       end
     end
+
+    describe '#tags' do
+      it 'returns the alphatical list of tags associated to post' do
+        expect(post.tags).to eq(['beginning', 'randomtag', 'test'])
+      end
+    end
   end
 
   context 'Markdown rendering' do
-    let(:content) { File.read('./spec/models/2014-07-29-markdown-test.md') }
+    let(:content) do
+      <<-CONTENT
+---
+title: Markdown Test
+---
+
+This is a **Markdown test**.
+CONTENT
+    end
+
     let(:post) { Post.new(content) }
 
     describe "#html" do
