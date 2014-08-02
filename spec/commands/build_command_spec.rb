@@ -157,8 +157,8 @@ footer
       end
     end
 
-    it 'drops rendered posts into the posts directory' do
-      contents = File.open("#{ test_dir }/_site/posts/2014/07/27/first-post.html", 'r') do |file|
+    it 'drops rendered posts into the _site directory' do
+      contents = File.open("#{ test_dir }/_site/2014/07/27/first-post.html", 'r') do |file|
         file.read()
       end
 
@@ -172,7 +172,7 @@ ACTUAL
 
       expect(contents).to eq(actual)
 
-      contents = File.open("#{ test_dir }/_site/posts/2014/06/22/test-post.html", 'r') do |file|
+      contents = File.open("#{ test_dir }/_site/2014/06/22/test-post.html", 'r') do |file|
         file.read()
       end
 

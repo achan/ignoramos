@@ -9,8 +9,8 @@ class BuildCommand
 
   def execute
     Liquid::Template.file_system = Liquid::LocalFileSystem.new("#{ @dir }/_includes")
-    FileUtils.rm_rf("#{ @dir }/_site/posts")
-    mkdir_p("_site/posts")
+    FileUtils.rm_rf("#{ @dir }/_site")
+    mkdir_p("_site")
 
     generate_posts
     generate_tag_index
@@ -38,8 +38,8 @@ class BuildCommand
     posts.each do |post|
       layout = read_file("_layouts/#{ post.vars['layout'] }/post.liquid")
 
-      mkdir_p("_site/posts#{ post.path }")
-      new_file("_site/posts#{ post.slug }.html",
+      mkdir_p("_site#{ post.path }")
+      new_file("_site#{ post.slug }.html",
                Liquid::Template.parse(layout).render({
                  'post' => post
                }.merge(post.vars)))
