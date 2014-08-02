@@ -12,7 +12,7 @@ class Ignoramos
     if cmd == 'new'
       NewCommand.new(args[1])
     elsif cmd == 'build'
-      BuildCommand.new(args[1])
+      BuildCommand.new
     else
       NilCommand.new
     end

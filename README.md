@@ -56,3 +56,8 @@ How posts are built
  - Parse the post for YAML to determine layout
  - Render layout as content
  - Render liquid layout (header, footer, content)
+
+After all posts and pages are generated, all remaining files that are not from a
+folder prefixed with `_` will be copied over to `_site`. Custom files take
+precedence, so if your files conflict with generated ones, yours will overwrite
+the generated file.
