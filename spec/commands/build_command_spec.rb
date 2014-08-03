@@ -13,6 +13,15 @@ RSpec.describe BuildCommand do
 
       FileUtils.mkdir_p("#{ test_dir }/_includes/default")
       FileUtils.mkdir_p("#{ test_dir }/_layouts/default")
+      FileUtils.mkdir_p("#{ test_dir }/rand/dir")
+
+      new_post_file = File.new("#{ test_dir }/rand/dir/test-post.html", 'w')
+      new_post_file.write('random data')
+      new_post_file.close
+
+      new_post_file = File.new("#{ test_dir }/testfile", 'w')
+      new_post_file.write('test data')
+      new_post_file.close
 
       new_post_file = File.new("#{ test_dir }/_includes/default/_header.liquid", 'w')
       new_post_file.write('header {{title}}')
@@ -127,6 +136,25 @@ POST
       new_post_file.write(post)
       new_post_file.close
 
+      post = <<-POST
+---
+title: Another Test Post
+timestamp: 2014-06-22T00:26:45-04:00
+tags: tag2, tag3
+---
+
+This is a test post. It's title is {{title}}.
+POST
+
+      new_post_file = File.new("#{ test_dir }/_posts/2014-06-22-another-world.md", 'w')
+      new_post_file.write(post)
+      new_post_file.close
+
+      FileUtils.mkdir_p("#{ test_dir }/2014/06/22")
+      new_post_file = File.new("#{ test_dir }/2014/06/22/another-test-post.html", 'w')
+      new_post_file.write('overridden data')
+      new_post_file.close
+
       command.execute
     end
 
@@ -147,12 +175,16 @@ First Post
 
 tag2
 
+Another Test Post
+
 First Post
 
 Test Post
 
 
 tag3
+
+Another Test Post
 
 Test Post
 
@@ -178,6 +210,8 @@ header
 <p>Hey world!</p>
 
 <p>This is a test post. It&#39;s title is Test Post.</p>
+
+<p>This is a test post. It&#39;s title is Another Test Post.</p>
 
 
 footer 
@@ -231,6 +265,23 @@ footer Test Post
 ACTUAL
 
       expect(contents).to eq(actual)
+    end
+
+    context 'custom files' do
+      it 'copies all files not in _ folders into _site' do
+        contents = File.open("#{ test_dir }/_site/rand/dir/test-post.html", 'r').
+                        read
+        expect(contents).to eq('random data')
+
+        contents = File.open("#{ test_dir }/_site/testfile", 'r').read
+        expect(contents).to eq('test data')
+      end
+
+      it 'overrides existing files' do
+        contents = File.open("#{ test_dir }/_site/2014/06/22/another-test-post.html", 'r').
+                        read
+        expect(contents).to eq('overridden data')
+      end
     end
   end
 end

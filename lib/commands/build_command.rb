@@ -17,9 +17,33 @@ class BuildCommand
     generate_posts
     generate_tag_index
     generate_homepage
+
+    copy_custom_files
   end
 
   private
+  def copy_custom_files
+    custom_files.each { |fn| copy_into_site(fn) }
+  end
+
+  def copy_into_site(filename)
+    destination = sandbox_filename(filename)
+
+    if File.directory?(filename)
+      destination = destination.slice(0..(destination.rindex('/')))
+    end
+
+    FileUtils.cp_r(filename, destination)
+  end
+
+  def sandbox_filename(filename)
+    filename.gsub(@dir, "#{ @dir }/_site")
+  end
+
+  def custom_files
+    @custom_files ||= Dir.glob("#{@dir}/[^_]*")
+  end
+
   def posts
     @posts ||= load_posts
   end
