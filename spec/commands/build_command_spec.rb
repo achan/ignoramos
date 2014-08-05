@@ -32,11 +32,11 @@ RSpec.describe BuildCommand do
       new_post_file.close
 
       new_post_file = File.new("#{ test_dir }/_includes/default/_post.liquid", 'w')
-      new_post_file.write('{{post.html}}')
+      new_post_file.write('{{post.html}}{{post.permalink}}')
       new_post_file.close
 
       new_post_file = File.new("#{ test_dir }/_includes/default/_page.liquid", 'w')
-      new_post_file.write('{{page.html}}')
+      new_post_file.write('{{page.html}}{{post.permalink}}')
       new_post_file.close
 
       layout = <<-LAYOUT
@@ -222,11 +222,11 @@ footer
 header 
 
 
-<p>Hey world!</p>
+<p>Hey world!</p>/2014/07/27/first-post.html
 
-<p>This is a test post. It&#39;s title is Test Post.</p>
+<p>This is a test post. It&#39;s title is Test Post.</p>/2014/06/22/test-post.html
 
-<p>This is a test post. It&#39;s title is Another Test Post.</p>
+<p>This is a test post. It&#39;s title is Another Test Post.</p>/2014/06/22/another-test-post.html
 
 
 footer 
@@ -274,7 +274,7 @@ ACTUAL
       actual = <<-ACTUAL
 header First Post
 
-<p>Hey world!</p>
+<p>Hey world!</p>/2014/07/27/first-post.html
 
 footer First Post
 ACTUAL
@@ -288,7 +288,7 @@ ACTUAL
       actual = <<-ACTUAL
 header Test Post
 
-<p>This is a test post. It&#39;s title is Test Post.</p>
+<p>This is a test post. It&#39;s title is Test Post.</p>/2014/06/22/test-post.html
 
 footer Test Post
 ACTUAL

@@ -8,14 +8,4 @@ class Page < Post
       "/#{ slug }.html"
     end
   end
-
-  private
-  def normalize_custom_permalink
-    permalink = @vars['permalink']
-    if permalink[0] == '/'
-      return permalink
-    else
-      return "/#{ permalink }"
-    end
-  end
 end

@@ -53,8 +53,19 @@ class Post
   def to_liquid
     {
       'html' => html,
-      'title' => title
+      'title' => title,
+      'permalink' => permalink
     }
+  end
+
+  protected
+  def normalize_custom_permalink
+    permalink = @vars['permalink']
+    if permalink[0] == '/'
+      return permalink
+    else
+      return "/#{ permalink }"
+    end
   end
 
   private
@@ -70,14 +81,5 @@ class Post
     Redcarpet::Markdown.new(Redcarpet::Render::HTML).
                         render(@content).
                         strip
-  end
-
-  def normalize_custom_permalink
-    permalink = @vars['permalink']
-    if permalink[0] == '/'
-      return permalink
-    else
-      return "/#{ permalink }"
-    end
   end
 end
