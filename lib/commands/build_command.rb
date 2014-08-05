@@ -82,7 +82,7 @@ class BuildCommand
       params = yield post
       layout = read_file("_layouts/#{ post.vars['layout'] }/#{ template }.liquid")
       mkdir_p("_site#{ post.path }")
-      new_file("_site#{ post.permalink }.html",
+      new_file("_site#{ post.permalink }",
                Liquid::Template.parse(layout).render(params.merge(post.vars)))
     end
   end

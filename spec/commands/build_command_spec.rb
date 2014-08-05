@@ -99,6 +99,21 @@ LAYOUT
 title: First Page
 timestamp: 2014-07-27T00:26:45-04:00
 tags: tag1, tag2
+permalink: custom-perm.html
+---
+
+Hey page!
+POST
+
+      new_post_file = File.new("#{ test_dir }/_pages/hello-world-pt-3.md", 'w')
+      new_post_file.write(page)
+      new_post_file.close
+
+      page = <<-POST
+---
+title: First Page
+timestamp: 2014-07-27T00:26:45-04:00
+tags: tag1, tag2
 ---
 
 Hey page!
@@ -223,6 +238,20 @@ footer
 
     it 'drops rendered pages into the _site directory' do
       contents = File.open("#{ test_dir }/_site/first-page.html", 'r') do |file|
+        file.read()
+      end
+
+      actual = <<-ACTUAL
+header First Page
+
+<p>Hey page!</p>
+
+footer First Page
+ACTUAL
+
+      expect(contents).to eq(actual)
+
+      contents = File.open("#{ test_dir }/_site/custom-perm.html", 'r') do |file|
         file.read()
       end
 

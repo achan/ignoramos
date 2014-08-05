@@ -38,7 +38,7 @@ CONTENT
 
     describe '#permalink' do
       it 'returns the permalink' do
-        expect(post.permalink).to eq('/2014/06/22/test-post')
+        expect(post.permalink).to eq('/2014/06/22/test-post.html')
       end
     end
 
@@ -64,6 +64,28 @@ CONTENT
     describe '#tags' do
       it 'returns the alphatical list of tags associated to post' do
         expect(post.tags).to eq(['beginning', 'randomtag', 'test'])
+      end
+    end
+  end
+
+  context 'permalink provided' do
+    let(:content) do
+      <<-CONTENT
+---
+title: Test
+permalink: custom-permalink.html
+timestamp: 2014-06-22T00:15:50-04:00
+---
+
+This is a test.
+CONTENT
+    end
+
+    let(:post) { Post.new(content) }
+
+    describe "#permalink" do
+      it 'uses the custom permalink' do
+        expect(post.permalink).to eq('/2014/06/22/custom-permalink.html')
       end
     end
   end

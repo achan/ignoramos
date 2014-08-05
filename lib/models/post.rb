@@ -19,8 +19,11 @@ class Post
   end
 
   def permalink
-    return @vars['permalink'] if @vars.has_key?('permalink')
-    "#{ path }/#{ slug }"
+    if @vars.has_key?('permalink')
+      "#{ path }#{ normalize_custom_permalink }"
+    else
+      "#{ path }/#{ slug }.html"
+    end
   end
 
   def slug
@@ -67,5 +70,14 @@ class Post
     Redcarpet::Markdown.new(Redcarpet::Render::HTML).
                         render(@content).
                         strip
+  end
+
+  def normalize_custom_permalink
+    permalink = @vars['permalink']
+    if permalink[0] == '/'
+      return permalink
+    else
+      return "/#{ permalink }"
+    end
   end
 end
