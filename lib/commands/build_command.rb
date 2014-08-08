@@ -2,6 +2,7 @@ require 'liquid'
 require 'fileutils'
 require 'models/post'
 require 'models/page'
+require 'models/app_config'
 
 class BuildCommand
   def initialize(dir = Dir.pwd)
@@ -22,6 +23,10 @@ class BuildCommand
   end
 
   private
+  def config
+    @config ||= AppConfig.new(read_file("_config.yml"))
+  end
+
   def copy_custom_files
     custom_files.each { |fn| copy_into_site(fn) }
   end
@@ -83,7 +88,7 @@ class BuildCommand
       layout = read_file("_layouts/#{ post.vars['layout'] }/#{ template }.liquid")
       mkdir_p("_site#{ post.path }")
       new_file("_site#{ post.permalink }",
-               Liquid::Template.parse(layout).render(params.merge(post.vars)))
+               Liquid::Template.parse(layout).render({ 'site' => site_config }.merge(params.merge(post.vars))))
     end
   end
 
@@ -106,7 +111,9 @@ class BuildCommand
 
     new_file("_site/tags.html",
              Liquid::Template.parse(layout).render({
-               'tags' => tags
+               'title' => config.vars['site']['name'],
+               'tags' => tags,
+               'site' => site_config
              }))
   end
 
@@ -119,8 +126,17 @@ class BuildCommand
 
     new_file("_site/index.html",
              Liquid::Template.parse(layout).render({
-               'posts' => homepage_posts
+               'posts' => homepage_posts,
+               'title' => config.vars['site']['name'],
+               'site' => site_config
              }))
+  end
+
+  def site_config
+    {
+      "description" => config.site_description,
+      "site_map" => config.site_map
+    }
   end
 
   def mkdir_p(dir)

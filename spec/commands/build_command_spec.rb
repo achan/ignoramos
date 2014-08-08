@@ -24,11 +24,11 @@ RSpec.describe BuildCommand do
       new_post_file.close
 
       new_post_file = File.new("#{ test_dir }/_includes/default/_header.liquid", 'w')
-      new_post_file.write('header {{title}}')
+      new_post_file.write('header {{title}} {{site.description}}')
       new_post_file.close
 
       new_post_file = File.new("#{ test_dir }/_includes/default/_footer.liquid", 'w')
-      new_post_file.write('footer {{title}}')
+      new_post_file.write('footer {{title}} {{site.description}}')
       new_post_file.close
 
       new_post_file = File.new("#{ test_dir }/_includes/default/_post.liquid", 'w')
@@ -180,7 +180,7 @@ POST
         end
 
         actual = <<-ACTUAL
-header 
+header My First Blog <p>Site description</p>
 
 
 tag1
@@ -205,7 +205,7 @@ Test Post
 
 
 
-footer 
+footer My First Blog <p>Site description</p>
   ACTUAL
 
         expect(contents).to eq(actual)
@@ -219,7 +219,7 @@ footer
         end
 
         actual = <<-ACTUAL
-header 
+header My First Blog <p>Site description</p>
 
 
 <p>Hey world!</p>/2014/07/27/first-post.html
@@ -229,7 +229,7 @@ header
 <p>This is a test post. It&#39;s title is Another Test Post.</p>/2014/06/22/another-test-post.html
 
 
-footer 
+footer My First Blog <p>Site description</p>
   ACTUAL
 
         expect(contents).to eq(actual)
@@ -242,11 +242,11 @@ footer
       end
 
       actual = <<-ACTUAL
-header First Page
+header First Page <p>Site description</p>
 
 <p>Hey page!</p>
 
-footer First Page
+footer First Page <p>Site description</p>
 ACTUAL
 
       expect(contents).to eq(actual)
@@ -256,11 +256,11 @@ ACTUAL
       end
 
       actual = <<-ACTUAL
-header First Page
+header First Page <p>Site description</p>
 
 <p>Hey page!</p>
 
-footer First Page
+footer First Page <p>Site description</p>
 ACTUAL
 
       expect(contents).to eq(actual)
@@ -272,11 +272,11 @@ ACTUAL
       end
 
       actual = <<-ACTUAL
-header First Post
+header First Post <p>Site description</p>
 
 <p>Hey world!</p>/2014/07/27/first-post.html
 
-footer First Post
+footer First Post <p>Site description</p>
 ACTUAL
 
       expect(contents).to eq(actual)
@@ -286,11 +286,11 @@ ACTUAL
       end
 
       actual = <<-ACTUAL
-header Test Post
+header Test Post <p>Site description</p>
 
 <p>This is a test post. It&#39;s title is Test Post.</p>/2014/06/22/test-post.html
 
-footer Test Post
+footer Test Post <p>Site description</p>
 ACTUAL
 
       expect(contents).to eq(actual)
