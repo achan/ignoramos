@@ -49,6 +49,7 @@ class Post
   end
 
   def tags
+    return unless @vars['tags']
     @tags ||= @vars['tags'].split(',').map { |x| "##{ x.strip }" }.sort
   end
 

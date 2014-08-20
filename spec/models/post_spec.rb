@@ -88,6 +88,12 @@ CONTENT
         expect(post.permalink).to eq('/2014/06/22/custom-permalink.html')
       end
     end
+
+    describe "#tags" do
+      it 'returns nil if none provided' do
+        expect(post.tags).to be_nil
+      end
+    end
   end
 
   context 'Markdown rendering' do
