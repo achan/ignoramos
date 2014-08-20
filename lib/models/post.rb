@@ -2,6 +2,8 @@ require 'yaml'
 require 'liquid'
 require 'redcarpet'
 require 'time'
+require 'rouge'
+require 'rouge/plugins/redcarpet'
 
 class Post
   attr_accessor :content
@@ -20,7 +22,7 @@ class Post
 
   def permalink
     if @vars.has_key?('permalink')
-      "#{ path }#{ normalize_custom_permalink }"
+      "#{ path }/#{ normalize_custom_permalink }.html"
     else
       "#{ path }/#{ slug }.html"
     end
@@ -47,14 +49,17 @@ class Post
   end
 
   def tags
-    @tags ||= @vars['tags'].split(',').map { |x| x.strip }.sort
+    @tags ||= @vars['tags'].split(',').map { |x| "##{ x.strip }" }.sort
   end
 
   def to_liquid
     {
       'html' => html,
       'title' => title,
-      'permalink' => permalink
+      'permalink' => permalink,
+      'slug' => slug,
+      'timestamp' => timestamp,
+      'tags' => tags
     }
   end
 
@@ -62,9 +67,9 @@ class Post
   def normalize_custom_permalink
     permalink = @vars['permalink']
     if permalink[0] == '/'
-      return permalink
+      return permalink[1..-1]
     else
-      return "/#{ permalink }"
+      return permalink
     end
   end
 
@@ -81,5 +86,9 @@ class Post
     Redcarpet::Markdown.new(Redcarpet::Render::HTML).
                         render(@content).
                         strip
+  end
+
+  class HTML < Redcarpet::Render::HTML
+    include Rouge::Plugins::Redcarpet
   end
 end

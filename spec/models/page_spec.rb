@@ -30,7 +30,7 @@ CONTENT
 title: Test Post
 timestamp: 2014-06-22T00:15:50-04:00
 tags: test, beginning, randomtag
-permalink: custom-permalink.html
+permalink: custom-permalink
 ---
 
 This is a test post. It is title is {{title}}.

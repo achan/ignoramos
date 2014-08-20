@@ -7,6 +7,7 @@ RSpec.describe AppConfig do
 ---
 site:
   description: this is **awesome**
+  user: Test User
   site_map: >
     [hello][h]
 
@@ -25,6 +26,12 @@ CONTENT
     describe '#site_description' do
       it 'returns site description in html' do
         expect(config.site_description).to eq('<p>this is <strong>awesome</strong></p>')
+      end
+    end
+
+    describe '#user' do
+      it 'returns user name' do
+        expect(config.user).to eq('Test User')
       end
     end
   end
@@ -47,6 +54,12 @@ CONTENT
     describe '#site_description' do
       it 'returns empty string' do
         expect(config.site_description).to eq('')
+      end
+    end
+
+    describe '#user' do
+      it 'returns empty string' do
+        expect(config.user).to eq('')
       end
     end
   end

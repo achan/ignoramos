@@ -17,6 +17,10 @@ class AppConfig
     @site_map ||= html(site.fetch('site_map', ''))
   end
 
+  def user
+    @user ||= site.fetch('user', '')
+  end
+
   private
   def site
     @site ||= vars.fetch('site', {})

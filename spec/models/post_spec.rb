@@ -63,7 +63,7 @@ CONTENT
 
     describe '#tags' do
       it 'returns the alphatical list of tags associated to post' do
-        expect(post.tags).to eq(['beginning', 'randomtag', 'test'])
+        expect(post.tags).to eq(['#beginning', '#randomtag', '#test'])
       end
     end
   end
@@ -73,7 +73,7 @@ CONTENT
       <<-CONTENT
 ---
 title: Test
-permalink: custom-permalink.html
+permalink: custom-permalink
 timestamp: 2014-06-22T00:15:50-04:00
 ---
 

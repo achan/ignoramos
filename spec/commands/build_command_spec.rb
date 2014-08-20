@@ -99,7 +99,7 @@ LAYOUT
 title: First Page
 timestamp: 2014-07-27T00:26:45-04:00
 tags: tag1, tag2
-permalink: custom-perm.html
+permalink: custom-perm
 ---
 
 Hey page!
@@ -183,12 +183,12 @@ POST
 header My First Blog <p>Site description</p>
 
 
-tag1
+#tag1
 
 First Post
 
 
-tag2
+#tag2
 
 Another Test Post
 
@@ -197,7 +197,7 @@ First Post
 Test Post
 
 
-tag3
+#tag3
 
 Another Test Post
 

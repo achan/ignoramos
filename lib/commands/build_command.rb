@@ -135,7 +135,8 @@ class BuildCommand
   def site_config
     {
       "description" => config.site_description,
-      "site_map" => config.site_map
+      "site_map" => config.site_map,
+      "user" => config.user
     }
   end
 
