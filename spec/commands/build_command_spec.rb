@@ -43,7 +43,7 @@ RSpec.describe BuildCommand do
 {% include 'default/header' %}
 
 {% for tag in tags %}
-{{ tag.name }}
+\#{{ tag.name }}
 {% for post in tag.posts %}
 {{ post.title }}
 {% endfor %}

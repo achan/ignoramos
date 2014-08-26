@@ -50,7 +50,7 @@ class Post
 
   def tags
     return unless @vars['tags']
-    @tags ||= @vars['tags'].split(',').map { |x| "##{ x.strip }" }.sort
+    @tags ||= @vars['tags'].split(',').map { |x| x.strip }.sort
   end
 
   def to_liquid
