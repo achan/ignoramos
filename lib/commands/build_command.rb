@@ -111,7 +111,7 @@ class BuildCommand
 
     new_file("_site/tags.html",
              Liquid::Template.parse(layout).render({
-               'title' => config.vars['site']['name'],
+               'title' => "Tag Index - #{ config.vars['site']['name'] }",
                'tags' => tags,
                'site' => site_config
              }))

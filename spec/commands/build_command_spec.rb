@@ -180,7 +180,7 @@ POST
         end
 
         actual = <<-ACTUAL
-header My First Blog <p>Site description</p>
+header Tag Index - My First Blog <p>Site description</p>
 
 
 #tag1
@@ -205,7 +205,7 @@ Test Post
 
 
 
-footer My First Blog <p>Site description</p>
+footer Tag Index - My First Blog <p>Site description</p>
   ACTUAL
 
         expect(contents).to eq(actual)
