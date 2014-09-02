@@ -86,9 +86,11 @@ class BuildCommand
     posts.each do |post|
       params = yield post
       layout = read_file("_layouts/#{ post.vars['layout'] }/#{ template }.liquid")
+      post_params = { 'site' => site_config }.merge(params.merge(post.vars))
+      post_params['title'] = "#{ post_params['title'] } - #{ config.vars['site']['name'] }"
       mkdir_p("_site#{ post.path }")
       new_file("_site#{ post.permalink }",
-               Liquid::Template.parse(layout).render({ 'site' => site_config }.merge(params.merge(post.vars))))
+               Liquid::Template.parse(layout).render(post_params))
     end
   end
 

@@ -242,11 +242,11 @@ footer My First Blog <p>Site description</p>
       end
 
       actual = <<-ACTUAL
-header First Page <p>Site description</p>
+header First Page - My First Blog <p>Site description</p>
 
 <p>Hey page!</p>
 
-footer First Page <p>Site description</p>
+footer First Page - My First Blog <p>Site description</p>
 ACTUAL
 
       expect(contents).to eq(actual)
@@ -256,11 +256,11 @@ ACTUAL
       end
 
       actual = <<-ACTUAL
-header First Page <p>Site description</p>
+header First Page - My First Blog <p>Site description</p>
 
 <p>Hey page!</p>
 
-footer First Page <p>Site description</p>
+footer First Page - My First Blog <p>Site description</p>
 ACTUAL
 
       expect(contents).to eq(actual)
@@ -272,11 +272,11 @@ ACTUAL
       end
 
       actual = <<-ACTUAL
-header First Post <p>Site description</p>
+header First Post - My First Blog <p>Site description</p>
 
 <p>Hey world!</p>/2014/07/27/first-post.html
 
-footer First Post <p>Site description</p>
+footer First Post - My First Blog <p>Site description</p>
 ACTUAL
 
       expect(contents).to eq(actual)
@@ -286,11 +286,11 @@ ACTUAL
       end
 
       actual = <<-ACTUAL
-header Test Post <p>Site description</p>
+header Test Post - My First Blog <p>Site description</p>
 
 <p>This is a test post. It&#39;s title is Test Post.</p>/2014/06/22/test-post.html
 
-footer Test Post <p>Site description</p>
+footer Test Post - My First Blog <p>Site description</p>
 ACTUAL
 
       expect(contents).to eq(actual)
