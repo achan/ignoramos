@@ -212,6 +212,69 @@ footer Tag Index - My First Blog <p>Site description</p>
       end
     end
 
+    describe 'tag index per tag' do
+      it 'lists all posts ordered alphabetically' do
+        contents = File.open("#{ test_dir }/_site/tags/tag1.html", 'r') do |file|
+          file.read()
+        end
+
+        actual = <<-ACTUAL
+header #tag1 - My First Blog <p>Site description</p>
+
+
+#tag1
+
+First Post
+
+
+
+footer #tag1 - My First Blog <p>Site description</p>
+  ACTUAL
+        expect(contents).to eq(actual)
+
+        contents = File.open("#{ test_dir }/_site/tags/tag2.html", 'r') do |file|
+          file.read()
+        end
+
+        actual = <<-ACTUAL
+header #tag2 - My First Blog <p>Site description</p>
+
+
+#tag2
+
+Another Test Post
+
+First Post
+
+Test Post
+
+
+
+footer #tag2 - My First Blog <p>Site description</p>
+  ACTUAL
+        expect(contents).to eq(actual)
+        contents = File.open("#{ test_dir }/_site/tags/tag3.html", 'r') do |file|
+          file.read()
+        end
+
+        actual = <<-ACTUAL
+header #tag3 - My First Blog <p>Site description</p>
+
+
+#tag3
+
+Another Test Post
+
+Test Post
+
+
+
+footer #tag3 - My First Blog <p>Site description</p>
+  ACTUAL
+        expect(contents).to eq(actual)
+      end
+    end
+
     describe 'home page' do
       it 'prints the last 5 posts in descending order' do
         contents = File.open("#{ test_dir }/_site/index.html", 'r') do |file|

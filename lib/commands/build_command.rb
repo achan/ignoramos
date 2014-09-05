@@ -16,7 +16,7 @@ class BuildCommand
 
     generate_pages
     generate_posts
-    generate_tag_index
+    generate_tags_index
     generate_homepage
 
     copy_custom_files
@@ -108,15 +108,35 @@ class BuildCommand
     end
   end
 
-  def generate_tag_index
-    layout = read_file("_layouts/default/tags.liquid")
+  def generate_tags_index
+    new_tags_index_file("_site/tags.html",
+                        "Tag Index - #{ config.vars['site']['name'] }",
+                       tags)
 
-    new_file("_site/tags.html",
-             Liquid::Template.parse(layout).render({
-               'title' => "Tag Index - #{ config.vars['site']['name'] }",
+    generate_index_per_tag
+  end
+
+  def tags_layout
+    @layout ||= read_file("_layouts/default/tags.liquid")
+  end
+
+  def new_tags_index_file(filename, title, tags)
+    new_file(filename,
+             Liquid::Template.parse(tags_layout).render({
+               'title' => title,
                'tags' => tags,
                'site' => site_config
              }))
+  end
+
+  def generate_index_per_tag
+    mkdir_p("_site/tags")
+
+    tags.each do |tag|
+      new_tags_index_file("_site/tags/#{ tag['name'] }.html",
+                          "##{ tag['name'] } - #{ config.vars['site']['name'] }",
+                          [tag])
+    end
   end
 
   def generate_homepage
