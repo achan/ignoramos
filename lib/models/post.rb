@@ -75,7 +75,7 @@ class Post
       'title' => title,
       'permalink' => permalink,
       'slug' => slug,
-      'timestamp' => timestamp,
+      'timestamp' => timestamp.iso8601,
       'tags' => tags,
       'external_link' => external_link,
       'post_type' => post_type.to_s,
