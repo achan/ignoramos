@@ -48,7 +48,7 @@ CONTENT
       end
     end
 
-    describe 'path' do
+    describe '#path' do
       it 'returns the directory the post belongs in' do
         expect(post.path).to eq('/2014/06/22')
       end
@@ -66,6 +66,24 @@ CONTENT
         expect(post.tags).to eq(['beginning', 'randomtag', 'test'])
       end
     end
+
+    describe '#external_link' do
+      it 'returns nil' do
+        expect(post.external_link).to be_nil
+      end
+    end
+
+    describe '#title_link' do
+      it 'returns the permalink' do
+        expect(post.title_link).to eq('/2014/06/22/test-post.html')
+      end
+    end
+
+    describe '#post_type' do
+      it 'returns :self_post' do
+        expect(post.post_type).to eq(:self_post)
+      end
+    end
   end
 
   context 'permalink provided' do
@@ -75,6 +93,7 @@ CONTENT
 title: Test
 permalink: custom-permalink
 timestamp: 2014-06-22T00:15:50-04:00
+external_link: http://nba.com
 ---
 
 This is a test.
@@ -92,6 +111,24 @@ CONTENT
     describe "#tags" do
       it 'returns nil if none provided' do
         expect(post.tags).to be_nil
+      end
+    end
+
+    describe '#external_link' do
+      it 'returns the external link' do
+        expect(post.external_link).to eq('http://nba.com')
+      end
+    end
+
+    describe '#title_link' do
+      it 'returns the external link' do
+        expect(post.title_link).to eq('http://nba.com')
+      end
+    end
+
+    describe '#post_type' do
+      it 'returns :link_post' do
+        expect(post.post_type).to eq(:link_post)
       end
     end
   end

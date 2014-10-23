@@ -53,6 +53,22 @@ class Post
     @tags ||= @vars['tags'].split(',').map { |x| x.strip }.sort
   end
 
+  def external_link
+    @external_link ||= @vars['external_link']
+  end
+
+  def title_link
+    @title_link ||= if has_external_link?
+        external_link
+      else
+        permalink
+      end
+  end
+
+  def post_type
+    @post_type ||= has_external_link? ? :link_post : :self_post
+  end
+
   def to_liquid
     {
       'html' => html,
@@ -60,7 +76,10 @@ class Post
       'permalink' => permalink,
       'slug' => slug,
       'timestamp' => timestamp,
-      'tags' => tags
+      'tags' => tags,
+      'external_link' => external_link,
+      'post_type' => post_type.to_s,
+      'title_link' => title_link
     }
   end
 
@@ -75,6 +94,10 @@ class Post
   end
 
   private
+  def has_external_link?
+    !external_link.nil?
+  end
+
   def strip_yaml(text)
     text.to_s.gsub(/---(.|\n)*---/, '').strip
   end
