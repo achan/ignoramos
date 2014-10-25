@@ -71,7 +71,7 @@ class Post
   end
 
   def to_liquid
-    {
+    @vars.merge({
       'html' => html,
       'title' => title,
       'permalink' => permalink,
@@ -82,7 +82,7 @@ class Post
       'post_type' => post_type.to_s,
       'title_link' => title_link,
       'layout' => @vars['layout']
-    }
+    })
   end
 
   protected
