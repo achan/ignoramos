@@ -4,10 +4,10 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "ignoramos"
-  spec.version       = "0.0.0"
+  spec.version       = "1.0.0"
   spec.authors       = ["Amos Chan"]
   spec.email         = ["amosschan@gmail.com"]
-  spec.summary       = %q{A static site generator}
+  spec.summary       = %q{A static site generator for blogs and microposts.}
   spec.description   = spec.summary
   spec.homepage      = "http://rubygems.org/gems/ignoramos"
   spec.license       = "MIT"
