@@ -7,23 +7,22 @@ class Ignoramos
     command(args).execute
   end
 
-  def command(args)
-    cmd = args[0] unless args.empty?
-
-    if cmd == 'new'
-      NewCommand.new(args[1])
-    elsif cmd == 'build'
-      BuildCommand.new
-    elsif cmd == 'tweet'
-      TweetCommand.new(args[1])
-    else
-      NilCommand.new
-    end
-  end
-
   NilCommand = Struct.new(:args) do
     def execute
       puts 'command not supported'
     end
+  end
+
+  private
+  def command(args)
+    cmd = args.slice!(0) unless args.empty?
+    Object.const_get(classify(cmd)).new(*args)
+  rescue NameError
+    NilCommand.new
+  end
+
+
+  def classify(command)
+    "#{command}_command".split('_').collect(&:capitalize).join
   end
 end
