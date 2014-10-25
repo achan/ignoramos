@@ -17,7 +17,7 @@ class Post
 
   def initialize(content)
     @content = strip_yaml(content)
-    @vars = DEFAULT_VARS.merge(YAML::load(content))
+    @vars = DEFAULT_VARS.merge(YAML::load(content) || {})
   end
 
   def permalink
@@ -29,6 +29,7 @@ class Post
   end
 
   def slug
+    return '' unless @vars['title']
     @slug ||= @vars['title'].downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
   end
 
@@ -49,7 +50,7 @@ class Post
   end
 
   def tags
-    return unless @vars['tags']
+    return [] unless @vars['tags']
     @tags ||= @vars['tags'].split(',').map { |x| x.strip }.sort
   end
 
@@ -79,7 +80,8 @@ class Post
       'tags' => tags,
       'external_link' => external_link,
       'post_type' => post_type.to_s,
-      'title_link' => title_link
+      'title_link' => title_link,
+      'layout' => @vars['layout']
     }
   end
 
@@ -94,6 +96,9 @@ class Post
   end
 
   private
+  def post_vars
+  end
+
   def has_external_link?
     !external_link.nil?
   end

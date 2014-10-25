@@ -109,8 +109,8 @@ CONTENT
     end
 
     describe "#tags" do
-      it 'returns nil if none provided' do
-        expect(post.tags).to be_nil
+      it 'returns [] if none provided' do
+        expect(post.tags).to eq([])
       end
     end
 
