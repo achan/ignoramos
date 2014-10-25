@@ -7,6 +7,7 @@ Status](https://travis-ci.org/achan/ignoramos.svg?branch=master)](https://travis
 Climate](https://codeclimate.com/github/achan/ignoramos/badges/gpa.svg)](https://codeclimate.com/github/achan/ignoramos)
 [![Coverage
 Status](https://img.shields.io/coveralls/achan/ignoramos.svg)](https://coveralls.io/r/achan/ignoramos)
+[![Gem Version](https://badge.fury.io/rb/ignoramos.svg)](http://badge.fury.io/rb/ignoramos)
 
 Getting started
 ===============
@@ -42,7 +43,7 @@ Directory structure
 ```
 
 ```
-$ ignoramos build
+~ $ ignoramos build
 ```
 
 The `build` command is expected to be run at the root directory of the
@@ -57,7 +58,37 @@ How posts are built
  - Render layout as content
  - Render liquid layout (header, footer, content)
 
-After all posts and pages are generated, all remaining files that are not from a
-folder prefixed with `_` will be copied over to `_site`. Custom files take
+After all posts and pages are generated, all remaining files that are not from
+a folder prefixed with `_` will be copied over to `_site`. Custom files take
 precedence, so if your files conflict with generated ones, yours will overwrite
 the generated file.
+
+Microblogging
+===============
+
+Currently, the only external microblogging platform that is supported is Twitter:
+
+```
+~ $ ignoramos tweet "hello world #testing"
+```
+
+This command will post to twitter and create a micro blog in your `_posts`
+directory with filename: `tweet-<twitter_id>.md` with the following contents:
+
+```
+---
+title: tweet 526064479298396163
+timestamp: 2014-10-25T13:35:20-04:00
+layout: tweet
+tweet: https://twitter.com/amoschan/status/526064479298396163
+---
+
+hello world #testing
+```
+
+It is them up to your theme to support the `tweet` layout and optionally use the
+`tweet` variable to link back to Twitter.
+
+For an example of tweets in action, see the [achan/amoschan][ac] theme.
+
+[ac]: https://github.com/achan/amoschan/commit/f15c149e531a35f9c3a38f8c49311a0f3ce7c612

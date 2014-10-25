@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["amosschan@gmail.com"]
   spec.summary       = %q{A static site generator for blogs and microposts.}
   spec.description   = spec.summary
-  spec.homepage      = "http://rubygems.org/gems/ignoramos"
+  spec.homepage      = "http://github.com/achan/ignoramos"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
