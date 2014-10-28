@@ -1,3 +1,7 @@
+require 'commands/build_command'
+require 'commands/tweet_command'
+require 'commands/new_command'
+require 'commands/import_tweet_command'
 require 'pry'
 require 'ignoramos'
 
@@ -45,6 +49,13 @@ RSpec.describe Ignoramos do
       let(:command_class) { BuildCommand }
 
       it_behaves_like "a command executer with no args"
+    end
+
+    describe 'when the command passed is "import_tweet"' do
+      let(:args) { ['import_tweet', '1234'] }
+      let(:command_class) { ImportTweetCommand }
+
+      it_behaves_like "a command executer"
     end
 
     describe 'when the command is unsupported' do
