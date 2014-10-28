@@ -1,5 +1,5 @@
 require 'liquid'
-require 'fileutils'
+require 'file_helper'
 require 'models/post'
 require 'models/page'
 require 'models/app_config'
@@ -7,12 +7,13 @@ require 'models/app_config'
 class BuildCommand
   def initialize(dir = Dir.pwd)
     @dir = dir
+    @file_helper = FileHelper.new(dir)
   end
 
   def execute
     Liquid::Template.file_system = Liquid::LocalFileSystem.new("#{ @dir }/_includes")
     FileUtils.rm_rf("#{ @dir }/_site")
-    mkdir_p("_site")
+    @file_helper.mkdir_p("_site")
 
     generate_pages
     generate_posts
@@ -24,7 +25,7 @@ class BuildCommand
 
   private
   def config
-    @config ||= AppConfig.new(read_file("_config.yml"))
+    @config ||= AppConfig.new(@file_helper.read_file("_config.yml"))
   end
 
   def copy_custom_files
@@ -63,7 +64,7 @@ class BuildCommand
     Dir.foreach("#{ @dir }/#{ dir }") do |item|
       next if item == '.' || item == '..'
 
-      contents = read_file("#{ dir }/#{ item }")
+      contents = @file_helper.read_file("#{ dir }/#{ item }")
       posts << if block_given?
         yield contents
       else
@@ -85,11 +86,11 @@ class BuildCommand
   def generate_dir(posts, template, &block)
     posts.each do |post|
       params = yield post
-      layout = read_file("_layouts/#{ post.vars['layout'] }/#{ template }.liquid")
+      layout = @file_helper.read_file("_layouts/#{ post.vars['layout'] }/#{ template }.liquid")
       post_params = { 'site' => site_config }.merge(params.merge(post.vars))
       post_params['title'] = "#{ post_params['title'] } - #{ config.vars['site']['name'] }"
-      mkdir_p("_site#{ post.path }")
-      new_file("_site#{ post.permalink }",
+      @file_helper.mkdir_p("_site#{ post.path }")
+      @file_helper.new_file("_site#{ post.permalink }",
                Liquid::Template.parse(layout).render(post_params))
     end
   end
@@ -117,11 +118,11 @@ class BuildCommand
   end
 
   def tags_layout
-    @layout ||= read_file("_layouts/default/tags.liquid")
+    @layout ||= @file_helper.read_file("_layouts/default/tags.liquid")
   end
 
   def new_tags_index_file(filename, title, tags)
-    new_file(filename,
+    @file_helper.new_file(filename,
              Liquid::Template.parse(tags_layout).render({
                'title' => title,
                'tags' => tags,
@@ -130,7 +131,7 @@ class BuildCommand
   end
 
   def generate_index_per_tag
-    mkdir_p("_site/tags")
+    @file_helper.mkdir_p("_site/tags")
 
     tags.each do |tag|
       new_tags_index_file("_site/tags/#{ tag['name'] }.html",
@@ -144,14 +145,14 @@ class BuildCommand
                            reverse.
                            first(5)
 
-    layout = read_file("_layouts/default/posts.liquid")
+    layout = @file_helper.read_file("_layouts/default/posts.liquid")
 
-    new_file("_site/index.html",
-             Liquid::Template.parse(layout).render({
-               'posts' => homepage_posts,
-               'title' => config.vars['site']['name'],
-               'site' => site_config
-             }))
+    @file_helper.new_file("_site/index.html",
+                          Liquid::Template.parse(layout).render({
+                            'posts' => homepage_posts,
+                            'title' => config.vars['site']['name'],
+                            'site' => site_config
+                          }))
   end
 
   def site_config
@@ -162,27 +163,11 @@ class BuildCommand
     }
   end
 
-  def mkdir_p(dir)
-    FileUtils.mkdir_p("#{ @dir }/#{ dir }")
-  end
-
-  def new_file(filename, contents)
-    new_post_file = File.new("#{ @dir }/#{ filename }", 'w')
-    new_post_file.write(contents)
-    new_post_file.close
-  end
-
-  def read_file(filename)
-    File.open("#{ @dir }/#{ filename }", 'r') do |file|
-      file.read()
-    end
-  end
-
   def cache
     @cache ||= {}
   end
 
   def template(layout)
-    cache[layout.to_sym] ||= read_file("_layouts/#{ layout }/post.liquid")
+    cache[layout.to_sym] ||= @file_helper.read_file("_layouts/#{ layout }/post.liquid")
   end
 end

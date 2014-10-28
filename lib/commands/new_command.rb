@@ -1,10 +1,12 @@
 require 'fileutils'
+require 'file_helper'
 
 class NewCommand
   attr_accessor :dir
 
   def initialize(dir)
     @dir = dir.to_s
+    @file_helper = FileHelper.new(dir)
   end
 
   def execute
@@ -21,14 +23,7 @@ class NewCommand
     tagline = 'A short description of my blog'
     desc = 'Site description'
 
-    new_file("_config.yml",
-             "---\nsite:\n  name: #{ blog_name }\n  tagline: #{ tagline }\n  description: #{ desc }")
-  end
-
-  private
-  def new_file(filename, contents)
-    new_post_file = File.new("#{ @dir }/#{ filename }", 'w')
-    new_post_file.write(contents)
-    new_post_file.close
+    @file_helper.new_file("_config.yml",
+                          "---\nsite:\n  name: #{ blog_name }\n  tagline: #{ tagline }\n  description: #{ desc }")
   end
 end

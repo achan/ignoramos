@@ -1,5 +1,4 @@
 require 'liquid'
-require 'fileutils'
 require 'models/post'
 require 'models/app_config'
 require 'twitter'
@@ -20,37 +19,26 @@ LAYOUT
   def initialize(tweet)
     @tweet = tweet
     @dir = Dir.pwd
+    @file_helper = FileHelper.new(@dir)
   end
 
   def execute
     tweet = twitter.update(@tweet)
 
-    new_file("_posts/tweet-#{tweet.id}.md",
-             Liquid::Template.parse(LAYOUT).render({
-               'tweet' => {
-                 'content' => @tweet,
-                 'id' => tweet.id,
-                 'url' => tweet.uri.to_s,
-                 'timestamp' => DateTime.now
-               }
-             }))
+    @file_helper.new_file("_posts/tweet-#{tweet.id}.md",
+                          Liquid::Template.parse(LAYOUT).render({
+                            'tweet' => {
+                              'content' => @tweet,
+                              'id' => tweet.id,
+                              'url' => tweet.uri.to_s,
+                              'timestamp' => DateTime.now
+                            }
+                          }))
   end
 
   private
   def app_config
-    @config ||= AppConfig.new(read_file("_config.yml"))
-  end
-
-  def new_file(filename, contents)
-    new_post_file = File.new("#{@dir}/#{filename}", 'w')
-    new_post_file.write(contents)
-    new_post_file.close
-  end
-
-  def read_file(filename)
-    File.open("#{@dir}/#{filename}", 'r') do |file|
-      file.read()
-    end
+    @config ||= AppConfig.new(@file_helper.read_file("_config.yml"))
   end
 
   def twitter
