@@ -1,7 +1,3 @@
-require 'commands/new_command'
-require 'commands/build_command'
-require 'commands/tweet_command'
-
 class Ignoramos
   def initialize(args = [])
     command(args).execute
@@ -23,6 +19,12 @@ class Ignoramos
 
 
   def classify(command)
-    "#{command}_command".split('_').collect(&:capitalize).join
+    snake_class = "#{command}_command"
+    begin
+      require "commands/#{snake_class}"
+    rescue LoadError => e
+      puts e.to_s
+    end
+    snake_class.split('_').collect(&:capitalize).join
   end
 end
