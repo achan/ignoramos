@@ -11,7 +11,8 @@ RSpec.describe BuildCommand do
                                     'tagline' => 'Test tagline',
                                     'description' => '<p>Site description</p>',
                                     'user' => 'Test user',
-                                    'site_map' => ''})
+                                    'site_map' => '',
+                                    'post_limit' => 3 })
     end
 
 
@@ -175,6 +176,20 @@ POST
       new_post_file.write(post)
       new_post_file.close
 
+      post = <<-POST
+---
+title: Another Test Post
+timestamp: 2014-10-31T00:26:45-04:00
+tags: random
+---
+
+Newest test post. It's title is {{title}}.
+POST
+
+      new_post_file = File.new("#{ test_dir }/_posts/2014-10-31-another-world.md", 'w')
+      new_post_file.write(post)
+      new_post_file.close
+
       FileUtils.mkdir_p("#{ test_dir }/2014/06/22")
       new_post_file = File.new("#{ test_dir }/2014/06/22/another-test-post.html", 'w')
       new_post_file.write('overridden data')
@@ -191,6 +206,11 @@ POST
 
         actual = <<-ACTUAL
 header Tag Index - My First Blog <p>Site description</p>
+
+
+#random
+
+Another Test Post
 
 
 #tag1
@@ -286,7 +306,7 @@ footer #tag3 - My First Blog <p>Site description</p>
     end
 
     describe 'home page' do
-      it 'prints the last 5 posts in descending order' do
+      it 'prints the configurable amount of posts in descending order' do
         contents = File.open("#{ test_dir }/_site/index.html", 'r') do |file|
           file.read()
         end
@@ -295,11 +315,11 @@ footer #tag3 - My First Blog <p>Site description</p>
 header My First Blog <p>Site description</p>
 
 
+<p>Newest test post. It&#39;s title is Another Test Post.</p>/2014/10/31/another-test-post.html
+
 <p>Hey world!</p>/2014/07/27/first-post.html
 
 <p>This is a test post. It&#39;s title is Test Post.</p>/2014/06/22/test-post.html
-
-<p>This is a test post. It&#39;s title is Another Test Post.</p>/2014/06/22/another-test-post.html
 
 
 footer My First Blog <p>Site description</p>
