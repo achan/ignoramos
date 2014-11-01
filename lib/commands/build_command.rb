@@ -3,6 +3,7 @@ require 'file_helper'
 require 'models/post'
 require 'models/page'
 require 'models/settings'
+require 'generators/post_generator'
 
 class BuildCommand
   def initialize(dir = Dir.pwd)
@@ -82,12 +83,7 @@ class BuildCommand
   def generate_dir(posts, template, &block)
     posts.each do |post|
       params = yield post
-      layout = @file_helper.read_file("_layouts/#{ post.vars['layout'] }/#{ template }.liquid")
-      post_params = { 'site' => Settings.site.to_hash }.merge(params.merge(post.vars))
-      post_params['title'] = "#{post_params['title']} - #{Settings.site.name}"
-      @file_helper.mkdir_p("_site#{ post.path }")
-      @file_helper.new_file("_site#{ post.permalink }",
-               Liquid::Template.parse(layout).render(post_params))
+      PostGenerator.new(post, template, params, @file_helper).generate
     end
   end
 
