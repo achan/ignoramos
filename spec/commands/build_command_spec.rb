@@ -6,14 +6,17 @@ RSpec.describe BuildCommand do
   describe '#execute' do
     let(:test_dir) { 'tmp/testsite' }
     let(:command) { BuildCommand.new(test_dir) }
+    let(:settings) do
+      Settingslogic.new('site' => { 'name' => 'My First Blog',
+                                    'tagline' => 'Test tagline',
+                                    'description' => '<p>Site description</p>',
+                                    'user' => 'Test user',
+                                    'site_map' => ''})
+    end
+
 
     before do
-      allow(Settings).
-          to receive(:site).and_return(double(name: 'My First Blog',
-                                              tagline: 'Test tagline',
-                                              description: 'Site description',
-                                              user: 'Test user',
-                                              site_map: ''))
+      allow(Settings).to receive(:new).and_return(settings)
 
       FileUtils.rm_rf(test_dir)
       NewCommand.new(test_dir).execute

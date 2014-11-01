@@ -83,7 +83,7 @@ class BuildCommand
     posts.each do |post|
       params = yield post
       layout = @file_helper.read_file("_layouts/#{ post.vars['layout'] }/#{ template }.liquid")
-      post_params = { 'site' => site_config }.merge(params.merge(post.vars))
+      post_params = { 'site' => Settings.site.to_hash }.merge(params.merge(post.vars))
       post_params['title'] = "#{post_params['title']} - #{Settings.site.name}"
       @file_helper.mkdir_p("_site#{ post.path }")
       @file_helper.new_file("_site#{ post.permalink }",
@@ -122,7 +122,7 @@ class BuildCommand
              Liquid::Template.parse(tags_layout).render({
                'title' => title,
                'tags' => tags,
-               'site' => site_config
+               'site' => Settings.site.to_hash
              }))
   end
 
@@ -147,16 +147,8 @@ class BuildCommand
                           Liquid::Template.parse(layout).render({
                             'posts' => homepage_posts,
                             'title' => Settings.site.name,
-                            'site' => site_config
+                            'site' => Settings.site.to_hash
                           }))
-  end
-
-  def site_config
-    {
-      "description" => html(Settings.site.description),
-      "site_map" => html(Settings.site.site_map),
-      "user" => Settings.site.user
-    }
   end
 
   def cache
