@@ -139,7 +139,7 @@ class BuildCommand
   def generate_homepage
     homepage_posts = posts.sort_by { |p| [p.timestamp, p.title] }.
                            reverse.
-                           first(5)
+                           first(Settings.site['post_limit'] || 5)
 
     layout = @file_helper.read_file("_layouts/default/posts.liquid")
 
