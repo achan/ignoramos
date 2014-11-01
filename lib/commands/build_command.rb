@@ -5,6 +5,7 @@ require 'models/page'
 require 'models/settings'
 require 'generators/post_generator'
 require 'generators/homepage_generator'
+require 'generators/tags_generator'
 
 class BuildCommand
   def initialize(dir = Dir.pwd)
@@ -103,46 +104,11 @@ class BuildCommand
   end
 
   def generate_tags_index
-    new_tags_index_file("_site/tags.html",
-                        "Tag Index - #{Settings.site.name}",
-                       tags)
-
-    generate_index_per_tag
-  end
-
-  def tags_layout
-    @layout ||= @file_helper.read_file("_layouts/default/tags.liquid")
-  end
-
-  def new_tags_index_file(filename, title, tags)
-    @file_helper.new_file(filename,
-             Liquid::Template.parse(tags_layout).render({
-               'title' => title,
-               'tags' => tags,
-               'site' => Settings.site.to_hash
-             }))
-  end
-
-  def generate_index_per_tag
-    @file_helper.mkdir_p("_site/tags")
-
-    tags.each do |tag|
-      new_tags_index_file("_site/tags/#{ tag['name'] }.html",
-                          "##{ tag['name'] } - #{Settings.site.name}",
-                          [tag])
-    end
+    TagsGenerator.new(tags, @file_helper).generate
   end
 
   def generate_homepage
     HomepageGenerator.new(posts, @file_helper).generate
-  end
-
-  def cache
-    @cache ||= {}
-  end
-
-  def template(layout)
-    cache[layout.to_sym] ||= @file_helper.read_file("_layouts/#{ layout }/post.liquid")
   end
 
   def html(markdown)
