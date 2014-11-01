@@ -7,6 +7,7 @@ gem 'liquid', '~> 2.6.1'
 gem 'redcarpet', '~> 3.1.2'
 gem 'rouge', '~> 1.6.1'
 gem 'twitter', '~> 5.11.0'
+gem 'settingslogic', '~> 2.0'
 
 group :development, :test do
   gem 'rspec', '~> 3.0.0'

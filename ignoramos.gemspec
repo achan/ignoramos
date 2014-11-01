@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name          = "ignoramos"
   spec.version       = "1.1.0"
   spec.authors       = ["Amos Chan"]
-  spec.email         = ["amosschan@gmail.com"]
+  spec.email         = ["ac@amoschan.com"]
   spec.summary       = %q{A static site generator for blogs and microposts.}
   spec.description   = spec.summary
   spec.homepage      = "http://github.com/achan/ignoramos"

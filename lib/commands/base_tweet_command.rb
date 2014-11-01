@@ -1,6 +1,6 @@
 require 'liquid'
 require 'models/post'
-require 'models/app_config'
+require 'models/settings'
 require 'twitter'
 require 'twitter/tweet'
 require 'file_helper'
@@ -24,16 +24,12 @@ LAYOUT
   end
 
   protected
-  def app_config
-    @config ||= AppConfig.new(file_helper.read_file("_config.yml"))
-  end
-
   def twitter
     @twitter ||= Twitter::REST::Client.new do |config|
       config.consumer_key        = "RerlMuPVgYySMdqvuaBeSw"
       config.consumer_secret     = "Ccq3hS7fMplpjwCfvpVyPQXV6nPGGGonXSAdmi8ZIc"
-      config.access_token        = app_config.vars['twitter']['access_token']
-      config.access_token_secret = app_config.vars['twitter']['access_token_secret']
+      config.access_token        = Settings.twitter.access_token
+      config.access_token_secret = Settings.twitter.access_token_secret
     end
   end
 
