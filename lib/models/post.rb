@@ -80,8 +80,7 @@ class Post
       'tags' => tags,
       'external_link' => external_link,
       'post_type' => post_type.to_s,
-      'title_link' => title_link,
-      'layout' => @vars['layout']
+      'title_link' => title_link
     })
   end
 
