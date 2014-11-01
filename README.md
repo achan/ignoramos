@@ -86,6 +86,12 @@ tweet: https://twitter.com/amoschan/status/526064479298396163
 hello world #testing
 ```
 
+Similarly, you can import existing tweets into your blog after the fact:
+
+```
+~ $ ignoramos import_tweet 526064479298396163
+```
+
 It is them up to your theme to support the `tweet` layout and optionally use the
 `tweet` variable to link back to Twitter.
 
