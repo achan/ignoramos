@@ -34,11 +34,10 @@ TWEET
       remote_tweet.stub(:id).and_return(tweet_id)
       remote_tweet.stub(:created_at).and_return(now_time)
       remote_tweet.stub(:text).and_return(tweet)
-      allow_any_instance_of(AppConfig).
-          to receive(:vars).and_return({
-        'twitter' => { 'access_token' => 'token',
-                       'access_token_secret' => 'secret' }
-      })
+
+      allow(Settings).
+          to receive(:twitter).and_return(double(access_token: 'token',
+                                                 access_token_secret: 'secret'))
 
       expect_any_instance_of(Twitter::REST::Client).
           to receive(client_method).with(client_args).and_return(remote_tweet)

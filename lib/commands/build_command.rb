@@ -2,7 +2,7 @@ require 'liquid'
 require 'file_helper'
 require 'models/post'
 require 'models/page'
-require 'models/app_config'
+require 'models/settings'
 
 class BuildCommand
   def initialize(dir = Dir.pwd)
@@ -24,10 +24,6 @@ class BuildCommand
   end
 
   private
-  def config
-    @config ||= AppConfig.new(@file_helper.read_file("_config.yml"))
-  end
-
   def copy_custom_files
     custom_files.each { |fn| copy_into_site(fn) }
   end
@@ -88,7 +84,7 @@ class BuildCommand
       params = yield post
       layout = @file_helper.read_file("_layouts/#{ post.vars['layout'] }/#{ template }.liquid")
       post_params = { 'site' => site_config }.merge(params.merge(post.vars))
-      post_params['title'] = "#{ post_params['title'] } - #{ config.vars['site']['name'] }"
+      post_params['title'] = "#{post_params['title']} - #{Settings.site.name}"
       @file_helper.mkdir_p("_site#{ post.path }")
       @file_helper.new_file("_site#{ post.permalink }",
                Liquid::Template.parse(layout).render(post_params))
@@ -111,7 +107,7 @@ class BuildCommand
 
   def generate_tags_index
     new_tags_index_file("_site/tags.html",
-                        "Tag Index - #{ config.vars['site']['name'] }",
+                        "Tag Index - #{Settings.site.name}",
                        tags)
 
     generate_index_per_tag
@@ -135,7 +131,7 @@ class BuildCommand
 
     tags.each do |tag|
       new_tags_index_file("_site/tags/#{ tag['name'] }.html",
-                          "##{ tag['name'] } - #{ config.vars['site']['name'] }",
+                          "##{ tag['name'] } - #{Settings.site.name}",
                           [tag])
     end
   end
@@ -150,16 +146,16 @@ class BuildCommand
     @file_helper.new_file("_site/index.html",
                           Liquid::Template.parse(layout).render({
                             'posts' => homepage_posts,
-                            'title' => config.vars['site']['name'],
+                            'title' => Settings.site.name,
                             'site' => site_config
                           }))
   end
 
   def site_config
     {
-      "description" => config.site_description,
-      "site_map" => config.site_map,
-      "user" => config.user
+      "description" => html(Settings.site.description),
+      "site_map" => html(Settings.site.site_map),
+      "user" => Settings.site.user
     }
   end
 
@@ -169,5 +165,9 @@ class BuildCommand
 
   def template(layout)
     cache[layout.to_sym] ||= @file_helper.read_file("_layouts/#{ layout }/post.liquid")
+  end
+
+  def html(markdown)
+    Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(markdown).strip
   end
 end

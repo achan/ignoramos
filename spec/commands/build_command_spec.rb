@@ -8,6 +8,13 @@ RSpec.describe BuildCommand do
     let(:command) { BuildCommand.new(test_dir) }
 
     before do
+      allow(Settings).
+          to receive(:site).and_return(double(name: 'My First Blog',
+                                              tagline: 'Test tagline',
+                                              description: 'Site description',
+                                              user: 'Test user',
+                                              site_map: ''))
+
       FileUtils.rm_rf(test_dir)
       NewCommand.new(test_dir).execute
 
