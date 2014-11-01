@@ -4,6 +4,7 @@ require 'models/post'
 require 'models/page'
 require 'models/settings'
 require 'generators/post_generator'
+require 'generators/homepage_generator'
 
 class BuildCommand
   def initialize(dir = Dir.pwd)
@@ -133,18 +134,7 @@ class BuildCommand
   end
 
   def generate_homepage
-    homepage_posts = posts.sort_by { |p| [p.timestamp, p.title] }.
-                           reverse.
-                           first(Settings.site['post_limit'] || 5)
-
-    layout = @file_helper.read_file("_layouts/default/posts.liquid")
-
-    @file_helper.new_file("_site/index.html",
-                          Liquid::Template.parse(layout).render({
-                            'posts' => homepage_posts,
-                            'title' => "#{Settings.site.name} - #{Settings.site.tagline}",
-                            'site' => Settings.site.to_hash
-                          }))
+    HomepageGenerator.new(posts, @file_helper).generate
   end
 
   def cache
