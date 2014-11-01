@@ -146,7 +146,7 @@ class BuildCommand
     @file_helper.new_file("_site/index.html",
                           Liquid::Template.parse(layout).render({
                             'posts' => homepage_posts,
-                            'title' => Settings.site.name,
+                            'title' => "#{Settings.site.name} - #{Settings.site.tagline}",
                             'site' => Settings.site.to_hash
                           }))
   end

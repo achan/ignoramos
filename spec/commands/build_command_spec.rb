@@ -312,7 +312,7 @@ footer #tag3 - My First Blog <p>Site description</p>
         end
 
         actual = <<-ACTUAL
-header My First Blog <p>Site description</p>
+header My First Blog - Test tagline <p>Site description</p>
 
 
 <p>Newest test post. It&#39;s title is Another Test Post.</p>/2014/10/31/another-test-post.html
@@ -322,7 +322,7 @@ header My First Blog <p>Site description</p>
 <p>This is a test post. It&#39;s title is Test Post.</p>/2014/06/22/test-post.html
 
 
-footer My First Blog <p>Site description</p>
+footer My First Blog - Test tagline <p>Site description</p>
   ACTUAL
 
         expect(contents).to eq(actual)
