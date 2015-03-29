@@ -70,7 +70,7 @@ Currently, the only external microblogging platform that is supported is Twitter
 ```
 
 This command will post to twitter and create a micro blog in your `_posts`
-directory with filename: `tweet-<twitter_id>.md` with the following contents:
+directory with filename: `tweet-#{twitter_id}.md` with the following contents:
 
 ```
 ---
