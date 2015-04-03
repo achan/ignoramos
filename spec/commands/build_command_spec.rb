@@ -4,7 +4,9 @@ require 'commands/new_command'
 
 RSpec.describe BuildCommand do
   describe '#execute' do
-    let(:test_dir) { 'tmp/testsite' }
+    let(:fixtures_dir) { 'spec/fixtures' }
+    let(:test_dir) { "#{fixtures_dir}/test_site" }
+    let(:expected_site_dir) { "#{fixtures_dir}/expected_generated_site" }
     let(:command) { BuildCommand.new(test_dir) }
     let(:settings) do
       Settingslogic.new('site' => { 'name' => 'My First Blog',
@@ -15,185 +17,8 @@ RSpec.describe BuildCommand do
                                     'post_limit' => 3 })
     end
 
-
     before do
       allow(Settings).to receive(:new).and_return(settings)
-
-      FileUtils.rm_rf(test_dir)
-      NewCommand.new(test_dir).execute
-
-      FileUtils.mkdir_p("#{ test_dir }/_includes/default")
-      FileUtils.mkdir_p("#{ test_dir }/_layouts/default")
-      FileUtils.mkdir_p("#{ test_dir }/rand/dir")
-
-      new_post_file = File.new("#{ test_dir }/rand/dir/test-post.html", 'w')
-      new_post_file.write('random data')
-      new_post_file.close
-
-      new_post_file = File.new("#{ test_dir }/testfile", 'w')
-      new_post_file.write('test data')
-      new_post_file.close
-
-      new_post_file = File.new("#{ test_dir }/_includes/default/_header.liquid", 'w')
-      new_post_file.write('header {{title}} {{site.description}}')
-      new_post_file.close
-
-      new_post_file = File.new("#{ test_dir }/_includes/default/_footer.liquid", 'w')
-      new_post_file.write('footer {{title}} {{site.description}}')
-      new_post_file.close
-
-      new_post_file = File.new("#{ test_dir }/_includes/default/_post.liquid", 'w')
-      new_post_file.write('{{post.html}}{{post.permalink}}')
-      new_post_file.close
-
-      new_post_file = File.new("#{ test_dir }/_includes/default/_page.liquid", 'w')
-      new_post_file.write('{{page.html}}{{post.permalink}}')
-      new_post_file.close
-
-      layout = <<-LAYOUT
-{% include 'default/header' %}
-
-{% for tag in tags %}
-\#{{ tag.name }}
-{% for post in tag.posts %}
-{{ post.title }}
-{% endfor %}
-{% endfor %}
-
-{% include 'default/footer' %}
-LAYOUT
-
-      new_post_file = File.new("#{ test_dir }/_layouts/default/tags.liquid", 'w')
-      new_post_file.write(layout)
-      new_post_file.close
-
-      layout = <<-LAYOUT
-{% include 'default/header' %}
-
-{% for post in posts %}
-{% include 'default/post' %}
-{% endfor %}
-
-{% include 'default/footer' %}
-LAYOUT
-
-      new_post_file = File.new("#{ test_dir }/_layouts/default/posts.liquid", 'w')
-      new_post_file.write(layout)
-      new_post_file.close
-
-      layout = <<-LAYOUT
-{% include 'default/header' %}
-
-{% include 'default/post' %}
-
-{% include 'default/footer' %}
-LAYOUT
-
-      new_post_file = File.new("#{ test_dir }/_layouts/default/post.liquid", 'w')
-      new_post_file.write(layout)
-      new_post_file.close
-
-      layout = <<-LAYOUT
-{% include 'default/header' %}
-
-{% include 'default/page' %}
-
-{% include 'default/footer' %}
-LAYOUT
-
-      new_post_file = File.new("#{ test_dir }/_layouts/default/page.liquid", 'w')
-      new_post_file.write(layout)
-      new_post_file.close
-
-      page = <<-POST
----
-title: First Page
-timestamp: 2014-07-27T00:26:45-04:00
-tags: tag1, tag2
-permalink: custom-perm
----
-
-Hey page!
-POST
-
-      new_post_file = File.new("#{ test_dir }/_pages/hello-world-pt-3.md", 'w')
-      new_post_file.write(page)
-      new_post_file.close
-
-      page = <<-POST
----
-title: First Page
-timestamp: 2014-07-27T00:26:45-04:00
-tags: tag1, tag2
----
-
-Hey page!
-POST
-
-      new_post_file = File.new("#{ test_dir }/_pages/hello-world-pt-2.md", 'w')
-      new_post_file.write(page)
-      new_post_file.close
-
-      post = <<-POST
----
-title: First Post
-timestamp: 2014-07-27T00:26:45-04:00
-tags: tag1, tag2
----
-
-Hey world!
-POST
-
-      new_post_file = File.new("#{ test_dir }/_posts/2014-07-27-hello-world-pt-2.md", 'w')
-      new_post_file.write(post)
-      new_post_file.close
-
-      post = <<-POST
----
-title: Test Post
-timestamp: 2014-06-22T00:26:45-04:00
-tags: tag2, tag3
----
-
-This is a test post. It's title is {{title}}.
-POST
-
-      new_post_file = File.new("#{ test_dir }/_posts/2014-06-22-hello-world.md", 'w')
-      new_post_file.write(post)
-      new_post_file.close
-
-      post = <<-POST
----
-title: Another Test Post
-timestamp: 2014-06-22T00:26:45-04:00
-tags: tag2, tag3
----
-
-This is a test post. It's title is {{title}}.
-POST
-
-      new_post_file = File.new("#{ test_dir }/_posts/2014-06-22-another-world.md", 'w')
-      new_post_file.write(post)
-      new_post_file.close
-
-      post = <<-POST
----
-title: Another Test Post
-timestamp: 2014-10-31T00:26:45-04:00
-tags: random
----
-
-Newest test post. It's title is {{title}}.
-POST
-
-      new_post_file = File.new("#{ test_dir }/_posts/2014-10-31-another-world.md", 'w')
-      new_post_file.write(post)
-      new_post_file.close
-
-      FileUtils.mkdir_p("#{ test_dir }/2014/06/22")
-      new_post_file = File.new("#{ test_dir }/2014/06/22/another-test-post.html", 'w')
-      new_post_file.write('overridden data')
-      new_post_file.close
 
       command.execute
     end
@@ -204,39 +29,9 @@ POST
           file.read()
         end
 
-        actual = <<-ACTUAL
-header Tag Index - My First Blog <p>Site description</p>
-
-
-#random
-
-Another Test Post
-
-
-#tag1
-
-First Post
-
-
-#tag2
-
-Another Test Post
-
-First Post
-
-Test Post
-
-
-#tag3
-
-Another Test Post
-
-Test Post
-
-
-
-footer Tag Index - My First Blog <p>Site description</p>
-  ACTUAL
+        actual = File.open("#{ expected_site_dir }/tags.html", 'r') do |file|
+          file.read()
+        end
 
         expect(contents).to eq(actual)
       end
@@ -248,59 +43,31 @@ footer Tag Index - My First Blog <p>Site description</p>
           file.read()
         end
 
-        actual = <<-ACTUAL
-header #tag1 - My First Blog <p>Site description</p>
 
+        actual = File.open("#{ expected_site_dir }/tags/tag1.html", 'r') do |file|
+          file.read()
+        end
 
-#tag1
-
-First Post
-
-
-
-footer #tag1 - My First Blog <p>Site description</p>
-  ACTUAL
         expect(contents).to eq(actual)
 
         contents = File.open("#{ test_dir }/_site/tags/tag2.html", 'r') do |file|
           file.read()
         end
 
-        actual = <<-ACTUAL
-header #tag2 - My First Blog <p>Site description</p>
+        actual = File.open("#{ expected_site_dir }/tags/tag2.html", 'r') do |file|
+          file.read()
+        end
 
-
-#tag2
-
-Another Test Post
-
-First Post
-
-Test Post
-
-
-
-footer #tag2 - My First Blog <p>Site description</p>
-  ACTUAL
         expect(contents).to eq(actual)
+
         contents = File.open("#{ test_dir }/_site/tags/tag3.html", 'r') do |file|
           file.read()
         end
 
-        actual = <<-ACTUAL
-header #tag3 - My First Blog <p>Site description</p>
+        actual = File.open("#{ expected_site_dir }/tags/tag3.html", 'r') do |file|
+          file.read()
+        end
 
-
-#tag3
-
-Another Test Post
-
-Test Post
-
-
-
-footer #tag3 - My First Blog <p>Site description</p>
-  ACTUAL
         expect(contents).to eq(actual)
       end
     end
@@ -311,19 +78,9 @@ footer #tag3 - My First Blog <p>Site description</p>
           file.read()
         end
 
-        actual = <<-ACTUAL
-header My First Blog - Test tagline <p>Site description</p>
-
-
-<p>Newest test post. It&#39;s title is Another Test Post.</p>/2014/10/31/another-test-post.html
-
-<p>Hey world!</p>/2014/07/27/first-post.html
-
-<p>This is a test post. It&#39;s title is Test Post.</p>/2014/06/22/test-post.html
-
-
-footer My First Blog - Test tagline <p>Site description</p>
-  ACTUAL
+        actual = File.open("#{ expected_site_dir }/index.html", 'r') do |file|
+          file.read()
+        end
 
         expect(contents).to eq(actual)
       end
@@ -334,13 +91,9 @@ footer My First Blog - Test tagline <p>Site description</p>
         file.read()
       end
 
-      actual = <<-ACTUAL
-header First Page - My First Blog <p>Site description</p>
-
-<p>Hey page!</p>
-
-footer First Page - My First Blog <p>Site description</p>
-ACTUAL
+      actual = File.open("#{ expected_site_dir }/first-page.html", 'r') do |file|
+        file.read()
+      end
 
       expect(contents).to eq(actual)
 
@@ -348,13 +101,9 @@ ACTUAL
         file.read()
       end
 
-      actual = <<-ACTUAL
-header First Page - My First Blog <p>Site description</p>
-
-<p>Hey page!</p>
-
-footer First Page - My First Blog <p>Site description</p>
-ACTUAL
+      actual = File.open("#{ expected_site_dir }/custom-perm.html", 'r') do |file|
+        file.read()
+      end
 
       expect(contents).to eq(actual)
     end
@@ -364,13 +113,9 @@ ACTUAL
         file.read()
       end
 
-      actual = <<-ACTUAL
-header First Post - My First Blog <p>Site description</p>
-
-<p>Hey world!</p>/2014/07/27/first-post.html
-
-footer First Post - My First Blog <p>Site description</p>
-ACTUAL
+      actual = File.open("#{ expected_site_dir }/2014/07/27/first-post.html", 'r') do |file|
+        file.read()
+      end
 
       expect(contents).to eq(actual)
 
@@ -378,13 +123,9 @@ ACTUAL
         file.read()
       end
 
-      actual = <<-ACTUAL
-header Test Post - My First Blog <p>Site description</p>
-
-<p>This is a test post. It&#39;s title is Test Post.</p>/2014/06/22/test-post.html
-
-footer Test Post - My First Blog <p>Site description</p>
-ACTUAL
+      actual = File.open("#{ expected_site_dir }/2014/06/22/test-post.html", 'r') do |file|
+        file.read()
+      end
 
       expect(contents).to eq(actual)
     end
@@ -393,16 +134,31 @@ ACTUAL
       it 'copies all files not in _ folders into _site' do
         contents = File.open("#{ test_dir }/_site/rand/dir/test-post.html", 'r').
                         read
-        expect(contents).to eq('random data')
+
+        actual = File.open("#{ expected_site_dir }/rand/dir/test-post.html", 'r') do |file|
+          file.read()
+        end
+
+        expect(contents).to eq(actual)
 
         contents = File.open("#{ test_dir }/_site/testfile", 'r').read
-        expect(contents).to eq('test data')
+
+        actual = File.open("#{ expected_site_dir }/testfile", 'r') do |file|
+          file.read()
+        end
+
+        expect(contents).to eq(actual)
       end
 
       it 'overrides existing files' do
         contents = File.open("#{ test_dir }/_site/2014/06/22/another-test-post.html", 'r').
                         read
-        expect(contents).to eq('overridden data')
+
+        actual = File.open("#{ expected_site_dir }/2014/06/22/another-test-post.html", 'r') do |file|
+          file.read()
+        end
+
+        expect(contents).to eq(actual)
       end
     end
   end
