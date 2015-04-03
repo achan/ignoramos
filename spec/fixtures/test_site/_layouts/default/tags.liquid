@@ -1,0 +1,10 @@
+{% include 'default/header' %}
+
+{% for tag in tags %}
+#{{ tag.name }}
+{% for post in tag.posts %}
+{{ post.title }}
+{% endfor %}
+{% endfor %}
+
+{% include 'default/footer' %}
