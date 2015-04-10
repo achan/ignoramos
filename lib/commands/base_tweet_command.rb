@@ -42,12 +42,16 @@ LAYOUT
                               'id' => tweet.id,
                               'url' => tweet.uri.to_s,
                               'timestamp' => DateTime.parse(tweet.created_at.to_s)
-                            }
+                            }.merge(additional_metadata(tweet))
                           }))
   end
 
   def tweet_layout
     TWEET_LAYOUT
+  end
+
+  def additional_metadata(tweet)
+    {}
   end
 
   private
