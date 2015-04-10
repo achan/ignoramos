@@ -36,7 +36,7 @@ LAYOUT
 
   def persist_tweet(tweet)
     file_helper.new_file("_posts/tweet-#{tweet.id}.md",
-                          Liquid::Template.parse(TWEET_LAYOUT).render({
+                          Liquid::Template.parse(tweet_layout).render({
                             'tweet' => {
                               'content' => tweet.text,
                               'id' => tweet.id,
@@ -44,6 +44,10 @@ LAYOUT
                               'timestamp' => DateTime.parse(tweet.created_at.to_s)
                             }
                           }))
+  end
+
+  def tweet_layout
+    TWEET_LAYOUT
   end
 
   private
