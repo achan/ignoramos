@@ -22,7 +22,7 @@ describe TwitterAccessTokenService do
     let(:token) { 'abcdef' }
     let(:request_token) { double(:request_token, token: token) }
     let(:pin) { 'secretpin' }
-    let(:access_token) { '54321' }
+    let(:access_token) { double(:token, token: '12345', secret: '09876') }
     let(:authorize_url) { 'http://api.twitter.com/authorize' }
 
     before do
