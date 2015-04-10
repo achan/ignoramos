@@ -1,4 +1,5 @@
 require './lib/commands/new_command'
+require './lib/services/twitter_access_token_service'
 require 'fakefs/spec_helpers'
 require 'timecop'
 
@@ -35,9 +36,8 @@ TWEET
       remote_tweet.stub(:created_at).and_return(now_time)
       remote_tweet.stub(:text).and_return(tweet)
 
-      allow(Settings).
-          to receive(:twitter).and_return(double(access_token: 'token',
-                                                 access_token_secret: 'secret'))
+      allow_any_instance_of(TwitterAccessTokenService).
+          to receive(:call).and_return(double(token: 'token', secret: 'secret'))
 
       expect_any_instance_of(Twitter::REST::Client).
           to receive(client_method).with(client_args).and_return(remote_tweet)

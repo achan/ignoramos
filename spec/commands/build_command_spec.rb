@@ -11,7 +11,7 @@ RSpec.describe BuildCommand do
     let(:settings) do
       Settingslogic.new('site' => { 'name' => 'My First Blog',
                                     'tagline' => 'Test tagline',
-                                    'description' => '<p>Site description</p>',
+                                    'description' => 'Site description',
                                     'user' => 'Test user',
                                     'site_map' => '',
                                     'post_limit' => 3 })
@@ -25,140 +25,60 @@ RSpec.describe BuildCommand do
 
     describe 'tag index' do
       it 'lists all posts ordered by tags' do
-        contents = File.open("#{ test_dir }/_site/tags.html", 'r') do |file|
-          file.read()
-        end
-
-        actual = File.open("#{ expected_site_dir }/tags.html", 'r') do |file|
-          file.read()
-        end
-
-        expect(contents).to eq(actual)
+        expect(FileUtils.compare_file("#{ test_dir }/_site/tags.html",
+                                      "#{ expected_site_dir }/tags.html")).to be_truthy
       end
     end
 
     describe 'tag index per tag' do
       it 'lists all posts ordered alphabetically' do
-        contents = File.open("#{ test_dir }/_site/tags/tag1.html", 'r') do |file|
-          file.read()
-        end
+        expect(FileUtils.compare_file("#{ test_dir }/_site/tags/tag1.html",
+                                      "#{ expected_site_dir }/tags/tag1.html")).to be_truthy
 
+        expect(FileUtils.compare_file("#{ test_dir }/_site/tags/tag2.html",
+                                      "#{ expected_site_dir }/tags/tag2.html")).to be_truthy
 
-        actual = File.open("#{ expected_site_dir }/tags/tag1.html", 'r') do |file|
-          file.read()
-        end
-
-        expect(contents).to eq(actual)
-
-        contents = File.open("#{ test_dir }/_site/tags/tag2.html", 'r') do |file|
-          file.read()
-        end
-
-        actual = File.open("#{ expected_site_dir }/tags/tag2.html", 'r') do |file|
-          file.read()
-        end
-
-        expect(contents).to eq(actual)
-
-        contents = File.open("#{ test_dir }/_site/tags/tag3.html", 'r') do |file|
-          file.read()
-        end
-
-        actual = File.open("#{ expected_site_dir }/tags/tag3.html", 'r') do |file|
-          file.read()
-        end
-
-        expect(contents).to eq(actual)
+        expect(FileUtils.compare_file("#{ test_dir }/_site/tags/tag3.html",
+                                      "#{ expected_site_dir }/tags/tag3.html")).to be_truthy
       end
     end
 
     describe 'home page' do
       it 'prints the configurable amount of posts in descending order' do
-        contents = File.open("#{ test_dir }/_site/index.html", 'r') do |file|
-          file.read()
-        end
-
-        actual = File.open("#{ expected_site_dir }/index.html", 'r') do |file|
-          file.read()
-        end
-
-        expect(contents).to eq(actual)
+        expect(FileUtils.compare_file("#{ test_dir }/_site/index.html",
+                                      "#{ expected_site_dir }/index.html")).to be_truthy
       end
     end
 
     it 'drops rendered pages into the _site directory' do
-      contents = File.open("#{ test_dir }/_site/first-page.html", 'r') do |file|
-        file.read()
-      end
+      expect(FileUtils.compare_file("#{ test_dir }/_site/first-page.html",
+                                    "#{ expected_site_dir }/first-page.html")).to be_truthy
 
-      actual = File.open("#{ expected_site_dir }/first-page.html", 'r') do |file|
-        file.read()
-      end
 
-      expect(contents).to eq(actual)
-
-      contents = File.open("#{ test_dir }/_site/custom-perm.html", 'r') do |file|
-        file.read()
-      end
-
-      actual = File.open("#{ expected_site_dir }/custom-perm.html", 'r') do |file|
-        file.read()
-      end
-
-      expect(contents).to eq(actual)
+      expect(FileUtils.compare_file("#{ test_dir }/_site/custom-perm.html",
+                                    "#{ expected_site_dir }/custom-perm.html")).to be_truthy
     end
 
     it 'drops rendered posts into the _site directory' do
-      contents = File.open("#{ test_dir }/_site/2014/07/27/first-post.html", 'r') do |file|
-        file.read()
-      end
+      expect(FileUtils.compare_file("#{ test_dir }/_site/2014/07/27/first-post.html",
+                                    "#{ expected_site_dir }/2014/07/27/first-post.html")).to be_truthy
 
-      actual = File.open("#{ expected_site_dir }/2014/07/27/first-post.html", 'r') do |file|
-        file.read()
-      end
-
-      expect(contents).to eq(actual)
-
-      contents = File.open("#{ test_dir }/_site/2014/06/22/test-post.html", 'r') do |file|
-        file.read()
-      end
-
-      actual = File.open("#{ expected_site_dir }/2014/06/22/test-post.html", 'r') do |file|
-        file.read()
-      end
-
-      expect(contents).to eq(actual)
+      expect(FileUtils.compare_file("#{ test_dir }/_site/2014/06/22/test-post.html",
+                                    "#{ expected_site_dir }/2014/06/22/test-post.html")).to be_truthy
     end
 
     context 'custom files' do
       it 'copies all files not in _ folders into _site' do
-        contents = File.open("#{ test_dir }/_site/rand/dir/test-post.html", 'r').
-                        read
+        expect(FileUtils.compare_file("#{ test_dir }/_site/rand/dir/test-post.html",
+                                      "#{ expected_site_dir }/rand/dir/test-post.html")).to be_truthy
 
-        actual = File.open("#{ expected_site_dir }/rand/dir/test-post.html", 'r') do |file|
-          file.read()
-        end
-
-        expect(contents).to eq(actual)
-
-        contents = File.open("#{ test_dir }/_site/testfile", 'r').read
-
-        actual = File.open("#{ expected_site_dir }/testfile", 'r') do |file|
-          file.read()
-        end
-
-        expect(contents).to eq(actual)
+        expect(FileUtils.compare_file("#{ test_dir }/_site/testfile",
+                                      "#{ expected_site_dir }/testfile")).to be_truthy
       end
 
       it 'overrides existing files' do
-        contents = File.open("#{ test_dir }/_site/2014/06/22/another-test-post.html", 'r').
-                        read
-
-        actual = File.open("#{ expected_site_dir }/2014/06/22/another-test-post.html", 'r') do |file|
-          file.read()
-        end
-
-        expect(contents).to eq(actual)
+        expect(FileUtils.compare_file("#{ test_dir }/_site/2014/06/22/another-test-post.html",
+                                      "#{ expected_site_dir }/2014/06/22/another-test-post.html")).to be_truthy
       end
     end
   end

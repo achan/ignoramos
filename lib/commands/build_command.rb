@@ -6,6 +6,7 @@ require 'models/settings'
 require 'generators/post_generator'
 require 'generators/homepage_generator'
 require 'generators/tags_generator'
+require 'filters/markdown_filter'
 
 class BuildCommand
   def initialize(dir = Dir.pwd)
@@ -14,6 +15,7 @@ class BuildCommand
   end
 
   def execute
+    Liquid::Template.register_filter(MarkdownFilter)
     Liquid::Template.file_system = Liquid::LocalFileSystem.new("#{ @dir }/_includes")
     FileUtils.rm_rf("#{ @dir }/_site")
     @file_helper.mkdir_p("_site")
