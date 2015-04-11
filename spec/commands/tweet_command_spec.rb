@@ -9,37 +9,19 @@ RSpec.describe TweetCommand do
       let(:tweet_id) { '12354' }
       let(:tweet_path) { "_posts/tweet-#{tweet_id}.md" }
       let(:tweet_url) { "https://twitter.com/amoschan/status/#{tweet_id}" }
-      let(:tweet_image_path) { "/tmp/image.jpg" }
-      let(:relative_tweet_path) { "/img/tweets/#{tweet_id}-image.jpg" }
       let(:now) { DateTime.now }
       let(:now_time) { Time.now }
 
-      let(:remote_tweet) do
-        double(uri: URI(tweet_url),
-               id: tweet_id,
-               created_at: now_time,
-               text: tweet)
-      end
-
-      let(:settings) do
-        Settingslogic.new('site' => { 'name' => 'My First Blog',
-                                      'tagline' => 'Test tagline',
-                                      'description' => 'Site description',
-                                      'user' => 'Test user',
-                                      'site_map' => '',
-                                      'post_limit' => 3 })
-      end
-
-      before do
-        allow_any_instance_of(TwitterAccessTokenService).
-            to receive(:call).and_return(double(token: 'token', secret: 'secret'))
-
-        allow(Settings).to receive(:new).and_return(settings)
-      end
-
       context "when tweeting a text update" do
+        let(:remote_tweet) do
+          double(uri: URI(tweet_url),
+                 id: tweet_id,
+                 created_at: now_time,
+                 text: tweet)
+        end
+
         before do
-          expect_any_instance_of(Twitter::REST::Client).
+          expect_any_instance_of(TwitterClient).
               to receive(:update).with(tweet).and_return(remote_tweet)
         end
 
@@ -53,6 +35,14 @@ RSpec.describe TweetCommand do
 
       context "when tweeting an image" do
         let(:image_to_tweet) { double(to_s: '/tmp/image.png') }
+        let(:tweet_image_path) { "/tmp/image.jpg" }
+        let(:relative_tweet_path) { "/img/tweets/#{tweet_id}-image.jpg" }
+        let(:remote_tweet) do
+          double(uri: URI(tweet_url),
+                 id: tweet_id,
+                 created_at: now_time,
+                 text: tweet)
+        end
 
         before do
           allow(FileUtils).to receive(:mkdir_p)
@@ -61,7 +51,7 @@ RSpec.describe TweetCommand do
           allow(File).
             to receive(:basename).with(image_to_tweet).and_return('image.jpg')
 
-          expect_any_instance_of(Twitter::REST::Client).
+          expect_any_instance_of(TwitterClient).
               to receive(:update_with_media).with(tweet, image_to_tweet).
                                              and_return(remote_tweet)
         end
