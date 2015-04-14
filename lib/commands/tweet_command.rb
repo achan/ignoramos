@@ -1,16 +1,15 @@
-require 'commands/base_tweet_command'
 require 'fileutils'
-require 'tweets/status_publisher'
+
+require 'commands/base_tweet_command'
+require 'tweets/media_status_persister'
 require 'tweets/media_status_publisher'
 require 'tweets/status_persister'
-require 'tweets/media_status_persister'
+require 'tweets/status_publisher'
 
 class TweetCommand
   attr_reader :publisher, :persister
 
   def initialize(tweet, image_path=nil)
-    super()
-
     if image_path
       @publisher = MediaStatusPublisher.new(tweet, image_path)
       @persister = MediaStatusPersister.new(image_path)
