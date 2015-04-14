@@ -1,63 +1,26 @@
 require 'commands/base_tweet_command'
 require 'fileutils'
+require 'tweets/status_publisher'
+require 'tweets/media_status_publisher'
+require 'tweets/status_persister'
+require 'tweets/media_status_persister'
 
-class TweetCommand < BaseTweetCommand
-  IMAGE_TWEET_LAYOUT = <<-LAYOUT
----
-title: tweet {{tweet.id}}
-timestamp: {{tweet.timestamp}}
-layout: tweet
-tweet: {{tweet.url}}
-image: {{tweet.image}}
----
-
-{{tweet.content}}
-LAYOUT
+class TweetCommand
+  attr_reader :publisher, :persister
 
   def initialize(tweet, image_path=nil)
     super()
-    @tweet = tweet
-    @image_path = image_path
-  end
 
-  def execute
-    persist_tweet(publish_to_twitter)
-  end
-
-  protected
-  def additional_metadata(tweet)
-    return {} unless image
-
-    { 'image' => copy_image(tweet.id) }
-  end
-
-  def tweet_layout
-    return super() unless image
-
-    IMAGE_TWEET_LAYOUT
-  end
-
-  private
-  def image
-    @image ||= File.new(@image_path) if @image_path
-  end
-
-  def publish_to_twitter
-    if image
-      twitter.update_with_media(@tweet, image)
+    if image_path
+      @publisher = MediaStatusPublisher.new(tweet, image_path)
+      @persister = MediaStatusPersister.new(image_path)
     else
-      twitter.update(@tweet)
+      @publisher = StatusPublisher.new(tweet)
+      @persister = StatusPersister.new
     end
   end
 
-  def copy_image(tweet_id)
-    FileUtils.mkdir_p("#{Dir.pwd}/img/tweets")
-    FileUtils.cp(@image_path, "#{Dir.pwd}#{conventional_filename(tweet_id)}")
-
-    conventional_filename(tweet_id)
-  end
-
-  def conventional_filename(tweet_id)
-    "/img/tweets/#{tweet_id}-#{File.basename(image)}"
+  def execute
+    persister.persist(publisher.publish)
   end
 end
