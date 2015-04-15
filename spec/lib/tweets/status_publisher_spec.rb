@@ -8,7 +8,7 @@ describe StatusPublisher do
       tweet = 'this is a tweet'
       expect_any_instance_of(TwitterClient).to receive(:update).with(tweet)
 
-      StatusPublisher.new(tweet).publish
+      StatusPublisher.new.publish(tweet)
     end
   end
 end

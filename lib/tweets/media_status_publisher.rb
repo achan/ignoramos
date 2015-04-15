@@ -1,14 +1,13 @@
 require 'twitter_client'
 
 class MediaStatusPublisher
-  attr_reader :tweet, :media_path
+  attr_reader :media_path
 
-  def initialize(tweet, media_path)
-    @tweet = tweet
+  def initialize(media_path)
     @media_path = media_path
   end
 
-  def publish
+  def publish(tweet)
     twitter_client.update_with_media(tweet, media_file)
   end
 

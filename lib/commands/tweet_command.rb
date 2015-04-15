@@ -1,25 +1,19 @@
 require 'fileutils'
 
-require 'commands/base_tweet_command'
-require 'tweets/media_status_persister'
-require 'tweets/media_status_publisher'
-require 'tweets/status_persister'
-require 'tweets/status_publisher'
+require 'tweets/tweet_option_parser'
 
 class TweetCommand
-  attr_reader :publisher, :persister
+  attr_reader :publisher, :persister, :tweet
 
-  def initialize(tweet, image_path=nil)
-    if image_path
-      @publisher = MediaStatusPublisher.new(tweet, image_path)
-      @persister = MediaStatusPersister.new(image_path)
-    else
-      @publisher = StatusPublisher.new(tweet)
-      @persister = StatusPersister.new
-    end
+  def initialize(*args)
+    @tweet = args.shift
+    options = TweetOptionParser.new.parse(args)
+
+    @publisher = options.publisher
+    @persister = options.persister
   end
 
   def execute
-    persister.persist(publisher.publish)
+    persister.persist(publisher.publish(tweet))
   end
 end

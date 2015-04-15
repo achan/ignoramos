@@ -13,7 +13,7 @@ describe MediaStatusPublisher do
       expect_any_instance_of(TwitterClient).
         to receive(:update_with_media).with(tweet, media_file)
 
-      MediaStatusPublisher.new(tweet, media).publish
+      MediaStatusPublisher.new(media).publish(tweet)
     end
   end
 end

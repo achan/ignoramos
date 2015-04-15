@@ -1,13 +1,9 @@
 require 'twitter_client'
 
 class StatusPublisher
-  attr_reader :twitter_client, :tweet
+  attr_reader :twitter_client
 
-  def initialize(tweet)
-    @tweet = tweet
-  end
-
-  def publish
+  def publish(tweet)
     twitter_client.update(tweet)
   end
 
