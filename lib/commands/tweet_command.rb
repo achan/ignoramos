@@ -1,12 +1,19 @@
-require 'commands/base_tweet_command'
+require 'fileutils'
 
-class TweetCommand < BaseTweetCommand
-  def initialize(tweet)
-    super()
-    @tweet = tweet
+require 'tweets/tweet_option_parser'
+
+class TweetCommand
+  attr_reader :publisher, :persister, :tweet
+
+  def initialize(*args)
+    @tweet = args.shift
+    options = TweetOptionParser.new.parse(args)
+
+    @publisher = options.publisher
+    @persister = options.persister
   end
 
   def execute
-    persist_tweet(twitter.update(@tweet))
+    persister.persist(publisher.publish(tweet))
   end
 end

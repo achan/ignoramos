@@ -83,6 +83,11 @@ tweet: https://twitter.com/amoschan/status/526064479298396163
 hello world #testing
 ```
 
+Available options:
+
+ - `-m <media path>`: Attach a media file and consolidate the file into
+   `/img/tweets/#{tweet_id}-filename.ext`
+
 Similarly, you can import existing tweets into your blog after the fact:
 
 ```

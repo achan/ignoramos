@@ -9,3 +9,13 @@ class ImportTweetCommand < BaseTweetCommand
     persist_tweet(twitter.status(@tweet_id))
   end
 end
+
+# {
+#   entities: {
+#     media: [
+#       {
+#         media_url: 'http://example.com/image.jpg'
+#       }
+#     ]
+#   }
+# }

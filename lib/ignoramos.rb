@@ -11,7 +11,7 @@ class Ignoramos
 
   private
   def command(args)
-    cmd = args.slice!(0) unless args.empty?
+    cmd = args.shift unless args.empty?
     Object.const_get(classify(cmd)).new(*args)
   rescue NameError
     NilCommand.new
