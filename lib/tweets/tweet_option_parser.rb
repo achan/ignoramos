@@ -4,6 +4,7 @@ require 'tweets/media_status_persister'
 require 'tweets/media_status_publisher'
 require 'tweets/status_persister'
 require 'tweets/status_publisher'
+require 'tweets/no_op_publisher'
 
 class TweetOptionParser
   def parse(*argv)
@@ -23,6 +24,13 @@ class TweetOptionParser
         options.media_path = media_path
         options.publisher = MediaStatusPublisher.new(media_path)
         options.persister = MediaStatusPersister.new(media_path)
+      end
+
+      opts.on('-i',
+              '--import [TWEET_ID]',
+              'Import an existing tweet') do |tweet_id|
+        options.tweet_id = tweet_id
+        options.publisher = NoOpPublisher.new
       end
     end
   end

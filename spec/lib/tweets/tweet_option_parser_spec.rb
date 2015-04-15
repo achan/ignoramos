@@ -72,5 +72,14 @@ describe TweetOptionParser do
         end
       end
     end
+
+    describe "import option" do
+      let(:long_option)  { '--import' }
+      let(:short_option)  { '-i' }
+      let(:option_field) { :tweet_id }
+      let(:option_value) { '586535540008321024' }
+
+      it_behaves_like 'an option with long and short form'
+    end
   end
 end
