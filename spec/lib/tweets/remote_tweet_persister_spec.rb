@@ -10,11 +10,9 @@ describe RemoteTweetPersister do
     let(:tweet_id) { '1212134' }
 
     context "when remote tweet is a text update" do
-      let(:remote_tweet) { double('remote_tweet') }
+      let(:remote_tweet) { double('remote_tweet', media?: false) }
 
       it "delegates to StatusPersister" do
-        allow(remote_tweet).to receive(:entities).and_return(nil)
-
         expect_any_instance_of(TwitterClient).
           to receive(:status).with(tweet_id).and_return(remote_tweet)
         expect_any_instance_of(StatusPersister).
@@ -24,11 +22,11 @@ describe RemoteTweetPersister do
     end
 
     context "when remote tweet has media" do
-      let(:image_path) { 'http://example.com/image.jpg' }
+      let(:image_path) { 'http://pbs.twimg.com/media/BVqctpaIcAAJBn2.jpg' }
       let(:remote_tweet) do
-        double('remote_tweet', entities: double(media: [
-          double(media_url: image_path)
-        ]))
+        double('remote_tweet',
+               media?: true,
+               media: [double(media_uri: image_path)])
       end
 
       let(:persister) { double(:persister) }

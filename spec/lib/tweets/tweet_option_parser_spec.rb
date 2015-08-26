@@ -1,12 +1,13 @@
 require 'spec_helper'
 require 'rspec/its'
 
-require 'byebug'
-require 'tweets/tweet_option_parser'
-require 'tweets/status_publisher'
-require 'tweets/media_status_publisher'
-require 'tweets/status_persister'
 require 'tweets/media_status_persister'
+require 'tweets/media_status_publisher'
+require 'tweets/no_op_publisher'
+require 'tweets/remote_tweet_persister'
+require 'tweets/status_persister'
+require 'tweets/status_publisher'
+require 'tweets/tweet_option_parser'
 
 describe TweetOptionParser do
   describe "parse" do
@@ -80,6 +81,21 @@ describe TweetOptionParser do
       let(:option_value) { '586535540008321024' }
 
       it_behaves_like 'an option with long and short form'
+
+      describe 'tweet helpers' do
+        let(:argv) { [short_option, option_value] }
+
+        it 'assigns a NoOpPublisher' do
+          expect(options.publisher).to be_a(NoOpPublisher)
+        end
+
+        it 'assigns a RemoteTweetPersister' do
+          persister = double('RemoteTweetPersister')
+          expect(RemoteTweetPersister).
+            to receive(:new).with(option_value).and_return(persister)
+          expect(options.persister).to eq(persister)
+        end
+      end
     end
   end
 end

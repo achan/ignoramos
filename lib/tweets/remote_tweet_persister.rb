@@ -24,8 +24,21 @@ class RemoteTweetPersister
   end
 
   def media_from_tweet(tweet)
-    if tweet.entities && tweet.entities.media
-      return tweet.entities.media.first.media_url
+    return save_to_tmp(tweet) if tweet.media?
+  end
+
+  def save_to_tmp(tweet)
+    open(temporary_path(tweet), 'wb') do |file|
+      file << open(tweet.media.first.media_uri).read
     end
+  end
+
+  def temporary_path(tweet)
+    media_url = tweet.media.first.media_uri
+    "/tmp/#{tweet.id}.#{extension(media_url)}"
+  end
+
+  def extension(url)
+    url[url.rindex('.') + 1..url.length]
   end
 end

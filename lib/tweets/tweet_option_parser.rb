@@ -2,9 +2,10 @@ require 'optparse'
 
 require 'tweets/media_status_persister'
 require 'tweets/media_status_publisher'
+require 'tweets/no_op_publisher'
+require 'tweets/remote_tweet_persister'
 require 'tweets/status_persister'
 require 'tweets/status_publisher'
-require 'tweets/no_op_publisher'
 
 class TweetOptionParser
   def parse(*argv)
@@ -31,6 +32,7 @@ class TweetOptionParser
               'Import an existing tweet') do |tweet_id|
         options.tweet_id = tweet_id
         options.publisher = NoOpPublisher.new
+        options.persister = RemoteTweetPersister.new(tweet_id)
       end
     end
   end

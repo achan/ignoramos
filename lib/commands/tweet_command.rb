@@ -6,7 +6,7 @@ class TweetCommand
   attr_reader :publisher, :persister, :tweet
 
   def initialize(*args)
-    @tweet = args.shift
+    @tweet = args.first
     options = TweetOptionParser.new.parse(args)
 
     @publisher = options.publisher
