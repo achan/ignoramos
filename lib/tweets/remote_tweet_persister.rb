@@ -19,6 +19,7 @@ class RemoteTweetPersister
   end
 
   private
+
   def twitter_client
     @twitter_client ||= TwitterClient.new
   end
@@ -30,7 +31,7 @@ class RemoteTweetPersister
   def save_to_tmp(tweet)
     open(temporary_path(tweet), 'wb') do |file|
       file << open(tweet.media.first.media_uri).read
-    end
+    end.path
   end
 
   def temporary_path(tweet)

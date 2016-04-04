@@ -4,6 +4,7 @@ require 'tweets/remote_tweet_persister'
 require 'tweets/status_persister'
 require 'tweets/media_status_persister'
 require 'twitter_client'
+require "pry"
 
 describe RemoteTweetPersister do
   describe "#persist" do
@@ -22,22 +23,26 @@ describe RemoteTweetPersister do
     end
 
     context "when remote tweet has media" do
-      let(:image_path) { 'http://pbs.twimg.com/media/BVqctpaIcAAJBn2.jpg' }
+      let(:image_path) { 'spec/fixtures/remote_image.jpg' }
       let(:remote_tweet) do
         double('remote_tweet',
+               id: tweet_id,
                media?: true,
                media: [double(media_uri: image_path)])
       end
+      let(:image_content) { "random image content" }
 
       let(:persister) { double(:persister) }
 
       it 'delegates to MediaStatusPersister' do
-        expect_any_instance_of(TwitterClient).
-          to receive(:status).with(tweet_id).and_return(remote_tweet)
-        expect(MediaStatusPersister).
-          to receive(:new).with(image_path).and_return(persister)
+        expect_any_instance_of(TwitterClient).to receive(:status).
+          with(tweet_id).and_return(remote_tweet)
+        expect(MediaStatusPersister).to receive(:new).
+          with("/tmp/#{tweet_id}.jpg").and_return(persister)
         expect(persister).to receive(:persist).with(remote_tweet)
         RemoteTweetPersister.new(tweet_id).persist
+        expect(FileUtils.compare_file("/tmp/#{tweet_id}.jpg", "spec/fixtures/remote_image.jpg")).
+          to eq true
       end
     end
   end
