@@ -13,7 +13,6 @@ gem 'oauth', '~> 0.4.7'
 group :development, :test do
   gem 'rspec', '~> 3.0.0'
   gem 'rspec-its'
-  gem 'fakefs', '~> 0.5.0'
   gem 'guard'
   gem 'guard-rspec'
   gem 'coveralls', require: false

@@ -1,5 +1,4 @@
 require 'models/page'
-require 'fakefs/spec_helpers'
 
 RSpec.describe Page do
   let(:content) do
