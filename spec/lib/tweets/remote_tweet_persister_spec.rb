@@ -28,7 +28,7 @@ describe RemoteTweetPersister do
         double('remote_tweet',
                id: tweet_id,
                media?: true,
-               media: [double(media_uri: image_path)])
+               media: [double(media_uri: Addressable::URI.parse(image_path))])
       end
       let(:image_content) { "random image content" }
 

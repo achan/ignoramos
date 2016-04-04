@@ -30,13 +30,16 @@ class RemoteTweetPersister
 
   def save_to_tmp(tweet)
     open(temporary_path(tweet), 'wb') do |file|
-      file << open(tweet.media.first.media_uri).read
+      file << open(media_path(tweet)).read
     end.path
   end
 
   def temporary_path(tweet)
-    media_url = tweet.media.first.media_uri
-    "/tmp/#{tweet.id}.#{extension(media_url)}"
+    "/tmp/#{tweet.id}.#{extension(media_path(tweet))}"
+  end
+
+  def media_path(tweet)
+    tweet.media.first.media_uri.to_s
   end
 
   def extension(url)
