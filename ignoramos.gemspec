@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "ignoramos"
-  spec.version       = "1.1.0"
+  spec.version       = "1.2.0"
   spec.authors       = ["Amos Chan"]
   spec.email         = ["ac@amoschan.com"]
   spec.summary       = %q{A static site generator for blogs and microposts.}
