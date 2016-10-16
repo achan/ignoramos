@@ -87,11 +87,12 @@ Available options:
 
  - `-m <media path>`: Attach a media file and consolidate the file into
    `/img/tweets/#{tweet_id}-filename.ext`
+ - `-i <tweet id>: Import an existing tweet
 
 Similarly, you can import existing tweets into your blog after the fact:
 
 ```
-~ $ ignoramos import_tweet 526064479298396163
+~ $ ignoramos tweet -i 526064479298396163
 ```
 
 It is them up to your theme to support the `tweet` layout and optionally use the

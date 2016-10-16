@@ -13,7 +13,7 @@ class Ignoramos
   def command(args)
     cmd = args.shift unless args.empty?
     Object.const_get(classify(cmd)).new(*args)
-  rescue NameError
+  rescue NameError => e
     NilCommand.new
   end
 
@@ -23,7 +23,7 @@ class Ignoramos
     begin
       require "commands/#{snake_class}"
     rescue LoadError => e
-      puts e.to_s
+      puts e
     end
     snake_class.split('_').collect(&:capitalize).join
   end

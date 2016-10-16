@@ -15,10 +15,6 @@ tweet: {{tweet.url}}
 {{tweet.content}}
 LAYOUT
 
-  def initialize
-    @file_helper = FileHelper.new(Dir.pwd)
-  end
-
   def persist(tweet)
     file_helper.new_file("_posts/tweet-#{tweet.id}.md",
                          Liquid::Template.parse(layout).render({
@@ -33,5 +29,10 @@ LAYOUT
 
   def layout
     LAYOUT
+  end
+
+  private
+  def file_helper
+    @file_helper ||= FileHelper.new(Dir.pwd)
   end
 end

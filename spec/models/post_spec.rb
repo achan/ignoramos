@@ -1,5 +1,4 @@
 require 'models/post'
-require 'fakefs/spec_helpers'
 
 RSpec.describe Post do
   context 'YAML front-matter string provided' do

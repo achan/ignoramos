@@ -12,7 +12,7 @@ RSpec.describe TweetCommand do
     
     it 'persists the published tweet' do
       expect_any_instance_of(TweetOptionParser).
-        to receive(:parse).with(['other', 'options']).
+        to receive(:parse).with([tweet, 'other', 'options']).
                            and_return(options)
       expect(publisher).
         to receive(:publish).with(tweet).and_return(remote_tweet)

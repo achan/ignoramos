@@ -1,10 +1,7 @@
 require './lib/commands/new_command'
-require 'fakefs/spec_helpers'
 
 RSpec.describe NewCommand do
   describe '#execute' do
-    include FakeFS::SpecHelpers
-
     let(:command) { NewCommand.new('testdir') }
 
     before { command.execute }
