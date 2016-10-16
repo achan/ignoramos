@@ -14,8 +14,6 @@ class Ignoramos
     cmd = args.shift unless args.empty?
     Object.const_get(classify(cmd)).new(*args)
   rescue NameError => e
-    puts e
-
     NilCommand.new
   end
 
