@@ -11,8 +11,10 @@ describe MediaStatusPersister do
     let(:now_time) { Time.now }
 
     let(:image_to_tweet) { double(to_s: '/tmp/image.png') }
-    let(:tweet_image_path) { "/tmp/image.jpg" }
-    let(:relative_tweet_path) { "/img/tweets/#{tweet_id}-image.jpg" }
+    let(:tweet_image_paths) { ["/tmp/image.jpg", "/tmp/image2.jpg"] }
+    let(:relative_tweet_paths) do
+      ["/img/tweets/#{tweet_id}-image.jpg", "/img/tweets/#{tweet_id}-image.jpg"]
+    end
     let(:remote_tweet) do
       double(uri: URI(tweet_url),
              id: tweet_id,
@@ -28,24 +30,48 @@ describe MediaStatusPersister do
         to receive(:basename).with(image_to_tweet).and_return('image.jpg')
 
       expect_any_instance_of(FileHelper).
-        to receive(:new_file).with(tweet_path, expected_text_tweet)
+        to receive(:new_file).with(tweet_path, serialized_tweet_with_images)
 
-      MediaStatusPersister.new(tweet_image_path).persist(remote_tweet)
+      MediaStatusPersister.new(tweet_image_paths).persist(remote_tweet)
+    end
+
+    context 'when there are no images to tweet' do
+      it 'persists the status tweet in its conventional location' do
+        allow(FileUtils).to receive(:mkdir_p)
+        expect_any_instance_of(FileHelper).
+          to receive(:new_file).with(tweet_path, serialized_tweet_without_images)
+        MediaStatusPersister.new([]).persist(remote_tweet)
+      end
     end
   end
 
-    def expected_text_tweet
+    def serialized_tweet_with_images
       <<-END
 ---
 title: tweet #{tweet_id}
 timestamp: #{now.iso8601}
 layout: tweet
 tweet: #{tweet_url}
-image: #{relative_tweet_path}
+images:
+- #{relative_tweet_paths[0]}
+- #{relative_tweet_paths[1]}
+---
+
+#{tweet}
+END
+    end
+
+    def serialized_tweet_without_images
+      <<-END
+---
+title: tweet #{tweet_id}
+timestamp: #{now.iso8601}
+layout: tweet
+tweet: #{tweet_url}
+images:
 ---
 
 #{tweet}
 END
     end
 end
-

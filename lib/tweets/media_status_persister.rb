@@ -10,14 +10,14 @@ title: tweet {{tweet.id}}
 timestamp: {{tweet.timestamp}}
 layout: tweet
 tweet: {{tweet.url}}
-image: {{tweet.image}}
+images:{% for image in tweet.images %}\n- {{image}}{% endfor %}
 ---
 
 {{tweet.content}}
 LAYOUT
 
-  def initialize(image_path)
-    @image_paths = [image_path]
+  def initialize(image_paths)
+    @image_paths = image_paths
     @file_helper = FileHelper.new(Dir.pwd)
   end
 
@@ -29,7 +29,7 @@ LAYOUT
                              'id' => tweet.id,
                              'url' => tweet.uri.to_s,
                              'timestamp' => DateTime.parse(tweet.created_at.to_s),
-                             'image' => copy_images_to_blog(tweet.id).first
+                             'images' => copy_images_to_blog(tweet.id)
                            }
                          }))
   end
