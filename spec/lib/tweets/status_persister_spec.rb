@@ -39,14 +39,15 @@ describe StatusPersister do
       it 'persists the status tweet in its conventional location' do
         allow(FileUtils).to receive(:mkdir_p)
         expect_any_instance_of(FileHelper).
-          to receive(:new_file).with(tweet_path, serialized_tweet_without_images)
+          to receive(:new_file).
+          with(tweet_path, serialized_tweet_without_images)
         StatusPersister.new(media: []).persist(remote_tweet)
       end
     end
   end
 
-    def serialized_tweet_with_images
-      <<-END
+  def serialized_tweet_with_images
+    <<-END
 ---
 title: tweet #{tweet_id}
 timestamp: #{now.iso8601}
@@ -59,10 +60,10 @@ images:
 
 #{tweet}
 END
-    end
+  end
 
-    def serialized_tweet_without_images
-      <<-END
+  def serialized_tweet_without_images
+    <<-END
 ---
 title: tweet #{tweet_id}
 timestamp: #{now.iso8601}
@@ -73,5 +74,5 @@ images:
 
 #{tweet}
 END
-    end
+  end
 end
