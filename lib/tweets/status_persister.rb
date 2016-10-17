@@ -1,7 +1,7 @@
 require 'file_helper'
 require 'liquid'
 
-class MediaStatusPersister
+class StatusPersister
   attr_reader :file_helper, :image
 
   LAYOUT = <<-LAYOUT

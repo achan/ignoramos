@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'tweets/media_status_persister'
+require 'tweets/status_persister'
 
-describe MediaStatusPersister do
+describe StatusPersister do
   describe '#persist' do
     let(:tweet) { 'this is a tweet' }
     let(:tweet_id) { '12354' }
@@ -32,7 +32,7 @@ describe MediaStatusPersister do
       expect_any_instance_of(FileHelper).
         to receive(:new_file).with(tweet_path, serialized_tweet_with_images)
 
-      MediaStatusPersister.new(media: tweet_image_paths).persist(remote_tweet)
+      StatusPersister.new(media: tweet_image_paths).persist(remote_tweet)
     end
 
     context 'when there are no images to tweet' do
@@ -40,7 +40,7 @@ describe MediaStatusPersister do
         allow(FileUtils).to receive(:mkdir_p)
         expect_any_instance_of(FileHelper).
           to receive(:new_file).with(tweet_path, serialized_tweet_without_images)
-        MediaStatusPersister.new(media: []).persist(remote_tweet)
+        StatusPersister.new(media: []).persist(remote_tweet)
       end
     end
   end

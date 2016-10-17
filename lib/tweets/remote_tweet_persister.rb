@@ -10,7 +10,7 @@ class RemoteTweetPersister
   def persist(_=nil)
     tweet = twitter_client.status(tweet_id)
     media = media_from_tweet(tweet)
-    persister = MediaStatusPersister.new(media)
+    persister = StatusPersister.new(media)
 
     persister.persist(tweet)
   end

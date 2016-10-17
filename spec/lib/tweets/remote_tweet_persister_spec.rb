@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'tweets/remote_tweet_persister'
 require 'tweets/remote_tweet_persister'
-require 'tweets/media_status_persister'
+require 'tweets/status_persister'
 require 'twitter_client'
 require "pry"
 
@@ -13,8 +13,8 @@ describe RemoteTweetPersister do
       let(:remote_tweet) { double('remote_tweet', media: []) }
       let(:persister) { double(:persister) }
 
-      it "delegates to MediaStatusPersister" do
-        expect(MediaStatusPersister).
+      it "delegates to StatusPersister" do
+        expect(StatusPersister).
           to receive(:new).with([]).and_return(persister)
         expect_any_instance_of(TwitterClient).
           to receive(:status).with(tweet_id).and_return(remote_tweet)
@@ -34,10 +34,10 @@ describe RemoteTweetPersister do
 
       let(:persister) { double(:persister) }
 
-      it 'delegates to MediaStatusPersister' do
+      it 'delegates to StatusPersister' do
         expect_any_instance_of(TwitterClient).to receive(:status).
           with(tweet_id).and_return(remote_tweet)
-        expect(MediaStatusPersister).to receive(:new).
+        expect(StatusPersister).to receive(:new).
           with(["/tmp/#{tweet_id}.jpg"]).and_return(persister)
         expect(persister).to receive(:persist).with(remote_tweet)
         RemoteTweetPersister.new(tweet_id).persist
