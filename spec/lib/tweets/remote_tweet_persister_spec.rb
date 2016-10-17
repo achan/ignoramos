@@ -15,7 +15,7 @@ describe RemoteTweetPersister do
 
       it "delegates to StatusPersister" do
         expect(StatusPersister).
-          to receive(:new).with([]).and_return(persister)
+          to receive(:new).with(media: []).and_return(persister)
         expect_any_instance_of(TwitterClient).
           to receive(:status).with(tweet_id).and_return(remote_tweet)
         expect(persister).to receive(:persist).with(remote_tweet)
@@ -38,7 +38,7 @@ describe RemoteTweetPersister do
         expect_any_instance_of(TwitterClient).to receive(:status).
           with(tweet_id).and_return(remote_tweet)
         expect(StatusPersister).to receive(:new).
-          with(["/tmp/#{tweet_id}.jpg"]).and_return(persister)
+          with(media: ["/tmp/#{tweet_id}.jpg"]).and_return(persister)
         expect(persister).to receive(:persist).with(remote_tweet)
         RemoteTweetPersister.new(tweet_id).persist
         expect(FileUtils.compare_file("/tmp/#{tweet_id}.jpg", "spec/fixtures/remote_image.jpg")).
