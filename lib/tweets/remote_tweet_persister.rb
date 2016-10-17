@@ -9,10 +9,7 @@ class RemoteTweetPersister
 
   def persist(_=nil)
     tweet = twitter_client.status(tweet_id)
-    media = media_from_tweet(tweet)
-    persister = StatusPersister.new(media: media)
-
-    persister.persist(tweet)
+    StatusPersister.new(media: media_from_tweet(tweet)).persist(tweet)
   end
 
   private
@@ -22,17 +19,19 @@ class RemoteTweetPersister
   end
 
   def media_from_tweet(tweet)
-    media_paths(tweet).map { |p| save_to_tmp(tweet, p) }
+    media_paths(tweet).
+      map { |path| save_to_tmp(path) }.
+      map(&:path)
   end
 
-  def save_to_tmp(tweet, media_path)
-    open(temporary_path(tweet, media_path), 'wb') do |file|
+  def save_to_tmp(media_path)
+    open(temporary_path(media_path), 'wb') do |file|
       file << open(media_path).read
-    end.path
+    end
   end
 
-  def temporary_path(tweet, media_path)
-    "/tmp/#{tweet.id}.#{extension(media_path)}"
+  def temporary_path(media_path)
+    "/tmp/#{@tweet_id}.#{extension(media_path)}"
   end
 
   def media_paths(tweet)
