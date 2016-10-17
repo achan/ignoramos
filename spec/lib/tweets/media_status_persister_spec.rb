@@ -32,7 +32,7 @@ describe MediaStatusPersister do
       expect_any_instance_of(FileHelper).
         to receive(:new_file).with(tweet_path, serialized_tweet_with_images)
 
-      MediaStatusPersister.new(tweet_image_paths).persist(remote_tweet)
+      MediaStatusPersister.new(media: tweet_image_paths).persist(remote_tweet)
     end
 
     context 'when there are no images to tweet' do
@@ -40,7 +40,7 @@ describe MediaStatusPersister do
         allow(FileUtils).to receive(:mkdir_p)
         expect_any_instance_of(FileHelper).
           to receive(:new_file).with(tweet_path, serialized_tweet_without_images)
-        MediaStatusPersister.new([]).persist(remote_tweet)
+        MediaStatusPersister.new(media: []).persist(remote_tweet)
       end
     end
   end

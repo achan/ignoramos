@@ -16,8 +16,8 @@ images:{% for image in tweet.images %}\n- {{image}}{% endfor %}
 {{tweet.content}}
 LAYOUT
 
-  def initialize(image_paths)
-    @image_paths = image_paths
+  def initialize(media: [])
+    @image_paths = media
     @file_helper = FileHelper.new(Dir.pwd)
   end
 

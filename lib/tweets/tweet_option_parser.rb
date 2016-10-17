@@ -4,7 +4,6 @@ require 'tweets/media_status_persister'
 require 'tweets/media_status_publisher'
 require 'tweets/no_op_publisher'
 require 'tweets/remote_tweet_persister'
-require 'tweets/status_persister'
 require 'tweets/status_publisher'
 
 class TweetOptionParser
@@ -17,14 +16,14 @@ class TweetOptionParser
   def parser
     OptionParser.new do |opts|
       options.publisher = StatusPublisher.new
-      options.persister = StatusPersister.new
+      options.persister = MediaStatusPersister.new
 
       opts.on('-m',
               '--media [MEDIA_PATH]',
               'Attach media to tweet') do |media_path|
         options.media_path = media_path
         options.publisher = MediaStatusPublisher.new(media_path)
-        options.persister = MediaStatusPersister.new(media_path)
+        options.persister = MediaStatusPersister.new(media: [media_path])
       end
 
       opts.on('-i',

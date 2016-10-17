@@ -5,7 +5,6 @@ require 'tweets/media_status_persister'
 require 'tweets/media_status_publisher'
 require 'tweets/no_op_publisher'
 require 'tweets/remote_tweet_persister'
-require 'tweets/status_persister'
 require 'tweets/status_publisher'
 require 'tweets/tweet_option_parser'
 
@@ -42,8 +41,11 @@ describe TweetOptionParser do
         expect(options.publisher).to be_a(StatusPublisher)
       end
 
-      it 'assigns a StatusPersister' do
-        expect(options.persister).to be_a(StatusPersister)
+      it 'assigns a MediaStatusPersister' do
+        persister = double('MediaStatusPersister')
+        expect(MediaStatusPersister).
+          to receive(:new).with(no_args).and_return(persister)
+        expect(options.persister).to eq(persister)
       end
     end
 
@@ -66,9 +68,14 @@ describe TweetOptionParser do
         end
 
         it 'assigns a MediaStatusPersister' do
+          default_persister = double('MediaStatusPersister')
+          expect(MediaStatusPersister).
+            to receive(:new).with(no_args).and_return(default_persister)
+
           persister = double('MediaStatusPersister')
           expect(MediaStatusPersister).
-            to receive(:new).with(option_value).and_return(persister)
+            to receive(:new).with(media: [option_value]).and_return(persister)
+
           expect(options.persister).to eq(persister)
         end
       end
