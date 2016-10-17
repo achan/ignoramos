@@ -1,4 +1,5 @@
-require 'twitter_client'
+require "twitter_client"
+require "tweets/status_persister"
 
 class RemoteTweetPersister
   attr_reader :tweet_id
@@ -26,7 +27,7 @@ class RemoteTweetPersister
 
   def save_to_tmp(media_path)
     open(temporary_path(media_path), 'wb') do |file|
-      file << open(media_path).read
+      open(media_path, "r") { |remote_file| file << remote_file.read }
     end
   end
 
