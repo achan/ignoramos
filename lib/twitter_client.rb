@@ -26,24 +26,6 @@ class TwitterClient
   end
 
   def access_token
-    @access_token ||= if has_cached_access_token?
-                        cached_access_token
-                      else
-                        TwitterAccessTokenService.new.call
-                      end
-  end
-
-  def cached_access_token
-    {
-      token: Settings.twitter.access_token,
-      secret: Settings.twitter.access_token_secret
-    }
-  end
-
-  def has_cached_access_token?
-    begin
-      Settings.twitter.access_token && Settings.twitter.access_token_secret
-    rescue
-    end
+    @access_token ||= TwitterAccessTokenService.new.call
   end
 end
