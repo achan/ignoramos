@@ -1,4 +1,4 @@
 require 'coveralls'
-require 'byebug'
+require 'pry'
 
 Coveralls.wear!

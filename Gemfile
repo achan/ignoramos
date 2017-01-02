@@ -17,5 +17,5 @@ group :development, :test do
   gem 'guard-rspec'
   gem 'coveralls', require: false
   gem 'timecop'
-  gem 'byebug'
+  gem 'pry'
 end

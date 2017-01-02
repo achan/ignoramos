@@ -18,10 +18,9 @@ class HomepageGenerator
 
   private
   def homepage_posts
-    @homepage_posts ||= @posts.sort_by { |p| [p.timestamp, p.title] }.
+    @homepage_posts ||= @posts.sort_by { |p| [p.published_at.to_i, p.title] }.
                                reverse.
                                first(Settings.site['post_limit'] || 5)
-
   end
 
   def template 

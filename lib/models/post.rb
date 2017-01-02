@@ -6,13 +6,14 @@ require 'rouge'
 require 'rouge/plugins/redcarpet'
 
 class Post
-  attr_accessor :content
-  attr_accessor :vars
+  attr_reader :content
+  attr_reader :vars
 
   DEFAULT_VARS = {
-    'layout' => 'default',
-    'markup' => 'ext',
-    'timestamp' => DateTime.now
+    "layout" => "default",
+    "markup" => "ext",
+    "timestamp" => DateTime.now,
+    "tags" => ""
   }
 
   def initialize(content)
@@ -30,61 +31,61 @@ class Post
 
   def slug
     return '' unless @vars['title']
-    @slug ||= @vars['title'].downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
+    @vars['title'].downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
   end
 
   def path
-    @path ||= "/#{ date.year }/#{ date.month.to_s.rjust(2, '0') }/#{ date.day.to_s.rjust(2, '0') }"
+    display_year = published_at.year
+    display_month = published_at.month.to_s.rjust(2, '0')
+    display_day = published_at.day.to_s.rjust(2, '0')
+
+    "/#{display_year}/#{display_month}/#{display_day}"
   end
 
   def html
     @html ||= Liquid::Template.parse(markdown_to_html).render(@vars)
   end
 
-  def timestamp
-    @timestamp ||= @vars['timestamp']
+  def published_at
+    @vars['timestamp']
   end
 
   def title
-    @title ||= @vars['title']
+    @vars['title']
   end
 
   def tags
-    return [] unless @vars['tags']
-    @tags ||= @vars['tags'].split(',').map { |x| x.strip }.sort
+    @tags ||= @vars['tags'].split(',').map(&:strip).sort
   end
 
   def external_link
-    @external_link ||= @vars['external_link']
+    vars['external_link']
   end
 
   def title_link
-    @title_link ||= if has_external_link?
-        external_link
-      else
-        permalink
-      end
+    external_link || permalink
   end
 
   def post_type
-    @post_type ||= has_external_link? ? :link_post : :self_post
+    has_external_link? ? :link_post : :self_post
   end
 
   def to_liquid
-    @vars.merge({
-      'html' => html,
-      'title' => title,
-      'permalink' => permalink,
-      'slug' => slug,
-      'timestamp' => timestamp.iso8601,
-      'tags' => tags,
-      'external_link' => external_link,
-      'post_type' => post_type.to_s,
-      'title_link' => title_link
-    })
+    {
+      "external_link" => external_link,
+      "html" => html,
+      "permalink" => permalink,
+      "post_type" => post_type.to_s,
+      "slug" => slug,
+      "tags" => tags,
+      "timestamp" => published_at.iso8601,
+      "title" => title,
+      "title_link" => title_link
+    }
   end
 
   protected
+
   def normalize_custom_permalink
     permalink = @vars['permalink']
     if permalink[0] == '/'
@@ -95,8 +96,6 @@ class Post
   end
 
   private
-  def post_vars
-  end
 
   def has_external_link?
     !external_link.nil?
@@ -106,14 +105,11 @@ class Post
     text.to_s.gsub(/---(.|\n)*---/, '').strip
   end
 
-  def date
-    @date ||= timestamp.to_date
-  end
-
   def markdown_to_html
-    Redcarpet::Markdown.new(Redcarpet::Render::HTML).
-                        render(@content).
-                        strip
+    Redcarpet::Markdown.
+      new(Redcarpet::Render::HTML).
+      render(content).
+      strip
   end
 
   class HTML < Redcarpet::Render::HTML

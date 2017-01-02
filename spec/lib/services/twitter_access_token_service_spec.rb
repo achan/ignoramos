@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'services/twitter_access_token_service'
-require 'byebug'
 
 describe TwitterAccessTokenService do
   describe '#call' do
